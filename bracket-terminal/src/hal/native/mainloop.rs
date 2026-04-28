@@ -146,12 +146,7 @@ pub fn main_loop<GS: GameState>(mut bterm: BTerm, mut gamestate: GS) -> BResult<
     let mut gl_context = unwrap.gl_context;
     let mut gl_surface = unwrap.gl_surface;
 
-    on_resize(
-        &mut bterm,
-        window.inner_size(),
-        window.scale_factor(),
-        true,
-    )?; // Additional resize to handle some X11 cases
+    on_resize(&mut bterm, window.inner_size(), window.scale_factor(), true)?; // Additional resize to handle some X11 cases
 
     let mut queued_resize_event: Option<ResizeEvent> = None;
     #[cfg(feature = "low_cpu")]

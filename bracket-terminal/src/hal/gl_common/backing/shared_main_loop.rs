@@ -165,8 +165,16 @@ pub(crate) fn render_consoles() -> BResult<()> {
                 backing.gl_draw(font, shader)?;
             }
             ConsoleBacking::Sprite { backing } => {
-                let sprite_sheet = cons.console.as_any().downcast_ref::<SpriteConsole>().unwrap().sprite_sheet;
-                backing.gl_draw(bi.sprite_sheets[sprite_sheet].backing.as_ref().unwrap(), shader)?;
+                let sprite_sheet = cons
+                    .console
+                    .as_any()
+                    .downcast_ref::<SpriteConsole>()
+                    .unwrap()
+                    .sprite_sheet;
+                backing.gl_draw(
+                    bi.sprite_sheets[sprite_sheet].backing.as_ref().unwrap(),
+                    shader,
+                )?;
             }
         }
     }
