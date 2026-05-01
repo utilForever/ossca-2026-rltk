@@ -424,7 +424,7 @@ impl BracketContext {
     /// Submit a batch for rendering.
     pub fn submit_batch(&self, z_order: usize, mut batch: DrawBatch) {
         if batch.needs_sort {
-            batch.batch.sort_by(|a, b| a.0.cmp(&b.0));
+            batch.batch.sort_by_key(|a| a.0);
         }
         self.command_buffers.lock().push((z_order, batch));
     }
@@ -432,7 +432,7 @@ impl BracketContext {
     /// Submit all draw batches for rendering.
     pub fn render_all_batches(&mut self) {
         let mut batches = self.command_buffers.lock();
-        batches.sort_unstable_by(|a, b| a.0.cmp(&b.0));
+        batches.sort_unstable_by_key(|a| a.0);
 
         batches.iter().for_each(|(_, batch)| {
             batch.batch.iter().for_each(|(_, cmd)| match cmd {
@@ -443,19 +443,19 @@ impl BracketContext {
                     self.set(pos.x, pos.y, color.fg, color.bg, *glyph)
                 }
                 DrawCommand::SetBackground { pos, bg } => self.set_bg(pos.x, pos.y, *bg),
-                DrawCommand::Print { pos, text } => self.print(pos.x, pos.y, &text),
+                DrawCommand::Print { pos, text } => self.print(pos.x, pos.y, text),
                 DrawCommand::PrintColor { pos, text, color } => {
-                    self.print_color(pos.x, pos.y, &text, color.fg, color.bg)
+                    self.print_color(pos.x, pos.y, text, color.fg, color.bg)
                 }
-                DrawCommand::PrintCentered { y, text } => self.print_centered(*y, &text),
+                DrawCommand::PrintCentered { y, text } => self.print_centered(*y, text),
                 DrawCommand::PrintColorCentered { y, text, color } => {
-                    self.print_color_centered(*y, color.fg, color.bg, &text)
+                    self.print_color_centered(*y, color.fg, color.bg, text)
                 }
                 DrawCommand::PrintCenteredAt { pos, text } => {
-                    self.print_centered_at(pos.x, pos.y, &text)
+                    self.print_centered_at(pos.x, pos.y, text)
                 }
                 DrawCommand::PrintColorCenteredAt { pos, text, color } => {
-                    self.print_color_centered_at(pos.x, pos.y, color.fg, color.bg, &text)
+                    self.print_color_centered_at(pos.x, pos.y, color.fg, color.bg, text)
                 }
                 DrawCommand::PrintRight { pos, text } => self.print_right(pos.x, pos.y, text),
                 DrawCommand::PrintColorRight { pos, text, color } => {

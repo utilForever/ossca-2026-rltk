@@ -12,6 +12,9 @@ keywords = ["roguelike", "gamedev", "RGB", "HSV", "color"]
 categories = ["game-engines", "graphics"]
 license = "MIT"
 
+[features]
+parsing = ["bracket-random/parsing"]
+
 [dependencies]
 bevy = "0.9"
 parking_lot = "0.12"
