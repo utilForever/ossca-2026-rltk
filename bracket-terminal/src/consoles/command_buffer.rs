@@ -176,7 +176,7 @@ impl DrawBatch {
     /// Submits a batch to the global drawing buffer, and empties the batch.
     pub fn submit(&mut self, z_order: usize) -> BResult<()> {
         if self.needs_sort {
-            self.batch.sort_by(|a, b| a.0.cmp(&b.0));
+            self.batch.sort_by_key(|a| a.0);
         }
         let mut new_batch = Vec::with_capacity(self.batch.len());
         self.batch.drain(0..).for_each(|(_, b)| new_batch.push(b));
@@ -858,7 +858,7 @@ impl DrawBatch {
 /// Submits the current batch to the BTerm buffer and empties it
 pub fn render_draw_buffer(bterm: &mut BTerm) -> BResult<()> {
     let mut buffer = COMMAND_BUFFER.lock();
-    buffer.sort_unstable_by(|a, b| a.0.cmp(&b.0));
+    buffer.sort_unstable_by_key(|a| a.0);
     buffer.iter().for_each(|(_, batch)| {
         batch.iter().for_each(|cmd| match cmd {
             DrawCommand::ClearScreen => bterm.cls(),

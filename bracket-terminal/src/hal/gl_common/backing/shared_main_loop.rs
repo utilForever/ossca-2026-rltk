@@ -112,7 +112,7 @@ pub(crate) fn rebuild_consoles() {
                     .downcast_mut::<FlexiConsole>()
                     .unwrap();
                 if fc.is_dirty {
-                    fc.tiles.sort_by(|a, b| a.z_order.cmp(&b.z_order));
+                    fc.tiles.sort_by_key(|a| a.z_order);
                     backing.rebuild_vertices(
                         fc.height,
                         fc.width,
@@ -133,7 +133,7 @@ pub(crate) fn rebuild_consoles() {
                     .downcast_mut::<SpriteConsole>()
                     .unwrap();
                 if sc.is_dirty {
-                    sc.sprites.sort_by(|a, b| a.z_order.cmp(&b.z_order));
+                    sc.sprites.sort_by_key(|a| a.z_order);
                     backing.rebuild_vertices(
                         sc.height,
                         sc.width,
