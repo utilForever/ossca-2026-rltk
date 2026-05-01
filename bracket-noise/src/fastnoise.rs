@@ -3186,7 +3186,7 @@ impl FastNoise {
                 )
         };
 
-        27.0 * (n0 + n1 + n2 + n3 + n4) as f32
+        27.0 * (n0 + n1 + n2 + n3 + n4)
     }
 
     #[allow(dead_code)]

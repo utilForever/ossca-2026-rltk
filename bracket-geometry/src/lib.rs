@@ -33,7 +33,7 @@
 //!
 //! ```rust
 //! use bracket_geometry::prelude::*;
-//! let bresenham_line = line2d(LineAlg::Bresenham, Point::new(1,1), Point::new(5,5));
+//! let bresenham_line = line2d(&LineAlg::Bresenham, Point::new(1,1), Point::new(5,5));
 //! println!("{:?}", bresenham_line);
 //! ```
 //!
