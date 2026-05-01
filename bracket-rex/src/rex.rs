@@ -204,7 +204,7 @@ mod tests {
         assert_eq!(xp.layers[1].width, 8);
         assert_eq!(xp.layers[1].height, 4);
         assert_eq!(xp.layers[1].get(0, 0).unwrap().fg, XpColor::BLACK);
-        assert_eq!(xp.layers[1].get(0, 0).unwrap().bg.is_transparent(), true);
+        assert!(xp.layers[1].get(0, 0).unwrap().bg.is_transparent());
         assert_eq!(xp.layers[1].get(0, 0).unwrap().ch, 32);
         assert_eq!(xp.layers[1].get(2, 2).unwrap().ch, 'B' as u32);
         assert_eq!(xp.layers[0].get(0, 0).unwrap().fg, XpColor::new(0, 0, 255));
