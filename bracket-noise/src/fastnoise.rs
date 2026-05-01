@@ -2103,7 +2103,7 @@ impl FastNoise {
 
         self.val_coord_4d(
             self.seed as i32,
-            xc ^ (xc as i32 >> 16),
+            xc ^ (xc >> 16),
             yc ^ (yc >> 16),
             zc ^ (zc >> 16),
             wc ^ (wc >> 16),
@@ -2811,26 +2811,20 @@ impl FastNoise {
         let y3 = y0 - 1. + 3.0 * G3;
         let z3 = z0 - 1. + 3.0 * G3;
 
-        let n0;
-        let n1;
-        let n2;
-        let n3;
-
         t = 0.6 - x0 * x0 - y0 * y0 - z0 * z0;
-        if t < 0. {
-            n0 = 0.;
+        let n0 = if t < 0. {
+            0.
         } else {
             t *= t;
-            n0 = t * t * self.grad_coord_3d(offset, i, j, k, x0, y0, z0);
-        }
+            t * t * self.grad_coord_3d(offset, i, j, k, x0, y0, z0)
+        };
 
         t = 0.6 - x1 * x1 - y1 * y1 - z1 * z1;
-        if t < 0. {
-            n1 = 0.
+        let n1 = if t < 0. {
+            0.
         } else {
             t *= t;
-            n1 = t
-                * t
+            t * t
                 * self.grad_coord_3d(
                     offset,
                     i + i1 as i32,
@@ -2839,16 +2833,15 @@ impl FastNoise {
                     x1,
                     y1,
                     z1,
-                );
-        }
+                )
+        };
 
         t = 0.6 - x2 * x2 - y2 * y2 - z2 * z2;
-        if t < 0. {
-            n2 = 0.
+        let n2 = if t < 0. {
+            0.
         } else {
             t *= t;
-            n2 = t
-                * t
+            t * t
                 * self.grad_coord_3d(
                     offset,
                     i + i2 as i32,
@@ -2857,16 +2850,16 @@ impl FastNoise {
                     x2,
                     y2,
                     z2,
-                );
-        }
+                )
+        };
 
         t = 0.6 - x3 * x3 - y3 * y3 - z3 * z3;
-        if t < 0. {
-            n3 = 0.
+        let n3 = if t < 0. {
+            0.
         } else {
             t *= t;
-            n3 = t * t * self.grad_coord_3d(offset, i + 1, j + 1, k + 1, x3, y3, z3);
-        }
+            t * t * self.grad_coord_3d(offset, i + 1, j + 1, k + 1, x3, y3, z3)
+        };
 
         32.0 * (n0 + n1 + n2 + n3)
     }
@@ -2977,33 +2970,29 @@ impl FastNoise {
         let x2 = x0 - 1.0 + 2.0 * G2;
         let y2 = y0 - 1.0 + 2.0 * G2;
 
-        let n0;
-        let n1;
-        let n2;
-
         t = 0.5 - x0 * x0 - y0 * y0;
-        if t < 0. {
-            n0 = 0.
+        let n0 = if t < 0. {
+            0.
         } else {
             t *= t;
-            n0 = t * t * self.grad_coord_2d(offset, i, j, x0, y0);
-        }
+            t * t * self.grad_coord_2d(offset, i, j, x0, y0)
+        };
 
         t = 0.5 - x1 * x1 - y1 * y1;
-        if t < 0. {
-            n1 = 0.
+        let n1 = if t < 0. {
+            0.
         } else {
             t *= t;
-            n1 = t * t * self.grad_coord_2d(offset, i + i1 as i32, j + j1 as i32, x1, y1);
-        }
+            t * t * self.grad_coord_2d(offset, i + i1, j + j1, x1, y1)
+        };
 
         t = 0.5 - x2 * x2 - y2 * y2;
-        if t < 0. {
-            n2 = 0.
+        let n2 = if t < 0. {
+            0.
         } else {
             t *= t;
-            n2 = t * t * self.grad_coord_2d(offset, i + 1, j + 1, x2, y2);
-        }
+            t * t * self.grad_coord_2d(offset, i + 1, j + 1, x2, y2)
+        };
 
         70.0 * (n0 + n1 + n2)
     }
@@ -3031,12 +3020,6 @@ impl FastNoise {
     #[allow(dead_code)]
     #[allow(clippy::many_single_char_names)]
     fn single_simplex4d(&self, offset: u8, x: f32, y: f32, z: f32, w: f32) -> f32 {
-        let n0: f32;
-        let n1: f32;
-        let n2: f32;
-        let n3: f32;
-        let n4: f32;
-
         let mut t = (x + y + z + w) * F4;
         let i = fast_floor(x + t) as f32;
         let j = fast_floor(y + t) as f32;
@@ -3121,23 +3104,21 @@ impl FastNoise {
         let w4 = w0 - 1.0 + 4.0 * G4;
 
         t = 0.6 - x0 * x0 - y0 * y0 - z0 * z0 - w0 * w0;
-        if t < 0.0 {
-            n0 = 0.;
+        let n0 = if t < 0.0 {
+            0.
         } else {
             t *= t;
-            n0 = t
-                * t
+            t * t
                 * self.grad_coord_4d(
                     offset, i as i32, j as i32, k as i32, l as i32, x0, y0, z0, w0,
-                );
-        }
+                )
+        };
         t = 0.6 - x1 * x1 - y1 * y1 - z1 * z1 - w1 * w1;
-        if t < 0.0 {
-            n1 = 0.;
+        let n1 = if t < 0.0 {
+            0.
         } else {
             t *= t;
-            n1 = t
-                * t
+            t * t
                 * self.grad_coord_4d(
                     offset,
                     i as i32 + i1,
@@ -3148,15 +3129,14 @@ impl FastNoise {
                     y1,
                     z1,
                     w1,
-                );
-        }
+                )
+        };
         t = 0.6 - x2 * x2 - y2 * y2 - z2 * z2 - w2 * w2;
-        if t < 0.0 {
-            n2 = 0.;
+        let n2 = if t < 0.0 {
+            0.
         } else {
             t *= t;
-            n2 = t
-                * t
+            t * t
                 * self.grad_coord_4d(
                     offset,
                     i as i32 + i2,
@@ -3167,15 +3147,14 @@ impl FastNoise {
                     y2,
                     z2,
                     w2,
-                );
-        }
+                )
+        };
         t = 0.6 - x3 * x3 - y3 * y3 - z3 * z3 - w3 * w3;
-        if t < 0.0 {
-            n3 = 0.;
+        let n3 = if t < 0.0 {
+            0.
         } else {
             t *= t;
-            n3 = t
-                * t
+            t * t
                 * self.grad_coord_4d(
                     offset,
                     i as i32 + i3,
@@ -3186,15 +3165,14 @@ impl FastNoise {
                     y3,
                     z3,
                     w3,
-                );
-        }
+                )
+        };
         t = 0.6 - x4 * x4 - y4 * y4 - z4 * z4 - w4 * w4;
-        if t < 0.0 {
-            n4 = 0.;
+        let n4 = if t < 0.0 {
+            0.
         } else {
             t *= t;
-            n4 = t
-                * t
+            t * t
                 * self.grad_coord_4d(
                     offset,
                     i as i32 + 1,
@@ -3205,8 +3183,8 @@ impl FastNoise {
                     y4,
                     z4,
                     w4,
-                );
-        }
+                )
+        };
 
         27.0 * (n0 + n1 + n2 + n3 + n4) as f32
     }

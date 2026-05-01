@@ -19,6 +19,7 @@
 
 #![warn(clippy::all, clippy::pedantic, clippy::cargo)]
 #![allow(clippy::needless_doctest_main)]
+#![allow(clippy::multiple_crate_versions)]
 mod embedding;
 
 pub mod prelude {

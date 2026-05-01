@@ -1,7 +1,8 @@
+#![allow(clippy::multiple_crate_versions)]
+
 //! bracket-lib is a wrapper of the bracket- set of crates designed initally
 //! for roguelike development (as RLTK) and later transitioned into a general
 //! use crate.
-
 /// prelude
 pub mod prelude {
     pub use bracket_algorithm_traits::prelude::*;

@@ -1,3 +1,5 @@
+#![allow(clippy::multiple_crate_versions)]
+
 pub use bracket_lib::prelude::rex;
 pub use bracket_lib::prelude::BError as RltkError;
 pub use bracket_lib::prelude::BTerm as Rltk;

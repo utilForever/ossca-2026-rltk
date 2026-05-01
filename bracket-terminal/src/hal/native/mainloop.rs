@@ -53,11 +53,7 @@ fn on_resize(
     let (l, r, t, b) = be.screen_scaler.get_backing_buffer_output_coordinates();
     be.quad_vao = Some(setup_quad_gutter(be.gl.as_ref().unwrap(), l, r, t, b));
     if send_event {
-        bterm.resize_pixels(
-            physical_size.width as u32,
-            physical_size.height as u32,
-            be.resize_scaling,
-        );
+        bterm.resize_pixels(physical_size.width, physical_size.height, be.resize_scaling);
     }
     let gl = be.gl.as_ref().unwrap();
     unsafe {
@@ -130,7 +126,7 @@ pub fn main_loop<GS: GameState>(mut bterm: BTerm, mut gamestate: GS) -> BResult<
         }
 
         for s in bit.sprite_sheets.iter_mut() {
-            let mut f = Font::new(&s.filename.to_string(), 1, 1, (1, 1));
+            let mut f = Font::new(s.filename.to_string(), 1, 1, (1, 1));
             f.setup_gl_texture(gl)?;
             s.backing = Some(Rc::new(Box::new(f)));
         }
@@ -138,12 +134,12 @@ pub fn main_loop<GS: GameState>(mut bterm: BTerm, mut gamestate: GS) -> BResult<
 
     // We're doing a little dance here to get around lifetime/borrow checking.
     // Removing the context data from BTerm in an atomic swap, so it isn't borrowed after move.
-    let wrap = { std::mem::replace(&mut BACKEND.lock().context_wrapper, None) };
+    let wrap = { BACKEND.lock().context_wrapper.take() };
     let unwrap = wrap.unwrap();
 
     let el = unwrap.el;
-    let mut window = unwrap.window;
-    let mut gl_context = unwrap.gl_context;
+    let window = unwrap.window;
+    let gl_context = unwrap.gl_context;
     let mut gl_surface = unwrap.gl_surface;
 
     on_resize(&mut bterm, window.inner_size(), window.scale_factor(), true)?; // Additional resize to handle some X11 cases
@@ -153,6 +149,7 @@ pub fn main_loop<GS: GameState>(mut bterm: BTerm, mut gamestate: GS) -> BResult<
     let spin_sleeper = spin_sleep::SpinSleeper::default();
     let my_window_id = window.id();
 
+    #[allow(deprecated)]
     el.run(move |event, event_loop| {
         event_loop.set_control_flow(TICK_TYPE);
         let wait_time = BACKEND.lock().frame_sleep_time.unwrap_or(33); // Hoisted to reduce locks
@@ -313,7 +310,7 @@ fn resize_surface(
 ) {
     let width = NonZeroU32::new(size.width.max(1)).unwrap();
     let height = NonZeroU32::new(size.height.max(1)).unwrap();
-    let _ = surface.resize(context, width, height);
+    surface.resize(context, width, height);
 }
 
 fn physical_key_to_virtual_keycode(key: &PhysicalKey) -> Option<VirtualKeyCode> {
@@ -599,7 +596,7 @@ fn tock<GS: GameState>(
             }
 
             image::save_buffer(
-                &filename,
+                filename,
                 &image::imageops::flip_vertical(&img),
                 w,
                 h,

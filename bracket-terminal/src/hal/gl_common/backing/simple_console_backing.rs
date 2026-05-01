@@ -13,8 +13,8 @@ pub struct SimpleConsoleBackend {
 
 impl SimpleConsoleBackend {
     pub fn new(width: usize, height: usize, gl: &glow::Context) -> SimpleConsoleBackend {
-        let vertex_capacity: usize = (13 * width as usize * height as usize) * 4;
-        let index_capacity: usize = 6 * width as usize * height as usize;
+        let vertex_capacity: usize = (13 * width * height) * 4;
+        let index_capacity: usize = 6 * width * height;
         let vao = SimpleConsoleBackend::init_gl_for_console(gl, vertex_capacity, index_capacity);
         let mut result = SimpleConsoleBackend {
             vao,
@@ -80,7 +80,7 @@ impl SimpleConsoleBackend {
         &mut self,
         height: u32,
         width: u32,
-        tiles: &Vec<Tile>,
+        tiles: &[Tile],
         offset_x: f32,
         offset_y: f32,
         scale: f32,
@@ -123,10 +123,10 @@ impl SimpleConsoleBackend {
         //let step_y: f32 = scale * 2.0f32 / height as f32;
 
         let mut index_count: i32 = 0;
-        let mut screen_y: f32 = -1.0 * scale
+        let mut screen_y: f32 = -scale
             + 2.0 * (scale_center.1 - height as i32 / 2) as f32 * (scale - 1.0) / height as f32;
         for y in 0..height {
-            let mut screen_x: f32 = -1.0 * scale
+            let mut screen_x: f32 = -scale
                 - 2.0 * (scale_center.0 - width as i32 / 2) as f32 * (scale - 1.0) / width as f32;
             for x in 0..width {
                 let fg = tiles[((y * width) + x) as usize].fg;
@@ -190,7 +190,7 @@ impl SimpleConsoleBackend {
         }
 
         self.vao.upload_buffers();
-        self.previous_console = Some(tiles.clone());
+        self.previous_console = Some(tiles.to_owned());
     }
 
     pub fn gl_draw(&mut self, font: &Font, shader: &Shader) -> BResult<()> {

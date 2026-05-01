@@ -17,10 +17,11 @@ use std::num::NonZeroU32;
 use winit::{
     dpi::LogicalSize,
     event_loop::EventLoop,
-    raw_window_handle::{HasRawDisplayHandle, HasRawWindowHandle},
+    raw_window_handle::{HasDisplayHandle, HasWindowHandle},
     window::{Fullscreen, WindowAttributes},
 };
 
+#[allow(deprecated)]
 pub fn init_raw<S: ToString>(
     width_pixels: u32,
     height_pixels: u32,
@@ -38,11 +39,11 @@ pub fn init_raw<S: ToString>(
         .with_inner_size(window_size);
     let window = el.create_window(window_attributes)?;
 
-    let raw_display = window.raw_display_handle()?;
+    let raw_display = window.display_handle()?.as_raw();
     #[cfg(target_os = "macos")]
     let preference = DisplayApiPreference::Cgl;
     #[cfg(target_os = "windows")]
-    let preference = DisplayApiPreference::EglThenWgl(Some(window.raw_window_handle()?));
+    let preference = DisplayApiPreference::EglThenWgl(Some(window.window_handle()?.as_raw()));
     #[cfg(all(not(target_os = "macos"), not(target_os = "windows")))]
     let preference = DisplayApiPreference::Egl;
 
@@ -56,7 +57,7 @@ pub fn init_raw<S: ToString>(
         template_builder = template_builder.prefer_hardware_accelerated(Some(true));
     }
 
-    let raw_window_handle = window.raw_window_handle()?;
+    let raw_window_handle = window.window_handle()?.as_raw();
     let primary_template = template_builder
         .clone()
         .compatible_with_native_window(raw_window_handle)
@@ -119,38 +120,34 @@ pub fn init_raw<S: ToString>(
     }
 
     // Load our basic shaders
-    let mut shaders: Vec<Shader> = Vec::new();
-
-    shaders.push(Shader::new(
-        &gl,
-        shader_strings::CONSOLE_WITH_BG_VS,
-        shader_strings::CONSOLE_WITH_BG_FS,
-    ));
-    shaders.push(Shader::new(
-        &gl,
-        shader_strings::CONSOLE_NO_BG_VS,
-        shader_strings::CONSOLE_NO_BG_FS,
-    ));
-    shaders.push(Shader::new(
-        &gl,
-        shader_strings::BACKING_VS,
-        shader_strings::BACKING_FS,
-    ));
-    shaders.push(Shader::new(
-        &gl,
-        shader_strings::SCANLINES_VS,
-        shader_strings::SCANLINES_FS,
-    ));
-    shaders.push(Shader::new(
-        &gl,
-        shader_strings::FANCY_CONSOLE_VS,
-        shader_strings::FANCY_CONSOLE_FS,
-    ));
-    shaders.push(Shader::new(
-        &gl,
-        shader_strings::SPRITE_CONSOLE_VS,
-        shader_strings::SPRITE_CONSOLE_FS,
-    ));
+    let shaders: Vec<Shader> = vec![
+        Shader::new(
+            &gl,
+            shader_strings::CONSOLE_WITH_BG_VS,
+            shader_strings::CONSOLE_WITH_BG_FS,
+        ),
+        Shader::new(
+            &gl,
+            shader_strings::CONSOLE_NO_BG_VS,
+            shader_strings::CONSOLE_NO_BG_FS,
+        ),
+        Shader::new(&gl, shader_strings::BACKING_VS, shader_strings::BACKING_FS),
+        Shader::new(
+            &gl,
+            shader_strings::SCANLINES_VS,
+            shader_strings::SCANLINES_FS,
+        ),
+        Shader::new(
+            &gl,
+            shader_strings::FANCY_CONSOLE_VS,
+            shader_strings::FANCY_CONSOLE_FS,
+        ),
+        Shader::new(
+            &gl,
+            shader_strings::SPRITE_CONSOLE_VS,
+            shader_strings::SPRITE_CONSOLE_FS,
+        ),
+    ];
 
     // Build the backing frame-buffer
     let initial_dpi_factor = window.scale_factor();

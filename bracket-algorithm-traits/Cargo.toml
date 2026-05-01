@@ -8,7 +8,7 @@ description = "Traits required for the bracket-* crates. Adapt your maps to the 
 homepage = "https://github.com/thebracket/bracket-lib"
 repository = "https://github.com/thebracket/bracket-lib"
 readme = "README.md"
-keywords = []
+keywords = ["roguelike", "gamedev", "algorithm", "traits"]
 categories = ["game-engines", "graphics"]
 license = "MIT"
 

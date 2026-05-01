@@ -1,14 +1,12 @@
-use lazy_static::lazy_static;
 use parking_lot::Mutex;
 use std::collections::HashMap;
+use std::sync::LazyLock;
 
 // These are included by default in `bracket-terminal`.
 const TERMINAL_8_8_BYTES: &[u8] = include_bytes!("../resources/terminal8x8.png");
 const TERMINAL_8_16_BYTES: &[u8] = include_bytes!("../resources/vga8x16.png");
 
-lazy_static! {
-    pub static ref EMBED: Mutex<Dictionary> = Mutex::new(Dictionary::new());
-}
+pub static EMBED: LazyLock<Mutex<Dictionary>> = LazyLock::new(|| Mutex::new(Dictionary::new()));
 
 /// Stores a dictionary of resources, generally added via `embedded_resource!` and `link_resource!` macros.
 #[derive(Default)]

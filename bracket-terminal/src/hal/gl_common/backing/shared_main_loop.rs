@@ -64,7 +64,7 @@ pub(crate) fn rebuild_consoles() {
         let cons = &mut bi.consoles[i];
         match c {
             ConsoleBacking::Simple { backing } => {
-                let mut sc = cons
+                let sc = cons
                     .console
                     .as_any_mut()
                     .downcast_mut::<SimpleConsole>()
@@ -85,7 +85,7 @@ pub(crate) fn rebuild_consoles() {
                 }
             }
             ConsoleBacking::Sparse { backing } => {
-                let mut sc = bi.consoles[i]
+                let sc = bi.consoles[i]
                     .console
                     .as_any_mut()
                     .downcast_mut::<SparseConsole>()
@@ -106,7 +106,7 @@ pub(crate) fn rebuild_consoles() {
                 }
             }
             ConsoleBacking::Fancy { backing } => {
-                let mut fc = bi.consoles[i]
+                let fc = bi.consoles[i]
                     .console
                     .as_any_mut()
                     .downcast_mut::<FlexiConsole>()
@@ -127,7 +127,7 @@ pub(crate) fn rebuild_consoles() {
                 }
             }
             ConsoleBacking::Sprite { backing } => {
-                let mut sc = bi.consoles[i]
+                let sc = bi.consoles[i]
                     .console
                     .as_any_mut()
                     .downcast_mut::<SpriteConsole>()

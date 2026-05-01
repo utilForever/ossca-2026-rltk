@@ -53,7 +53,7 @@ impl Ord for Node {
 
 impl PartialOrd for Node {
     fn partial_cmp(&self, b: &Self) -> Option<Ordering> {
-        b.f.partial_cmp(&self.f)
+        Some(self.cmp(b))
     }
 }
 

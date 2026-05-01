@@ -16,6 +16,7 @@ impl Degrees {
     /// # Arguments
     ///
     /// * `angle` - the angle to represent, in degrees.
+    #[must_use]
     pub fn new(angle: f32) -> Self {
         Self(angle)
     }
@@ -27,6 +28,7 @@ impl Radians {
     /// # Arguments
     ///
     /// * `angle` - the angle to represent, in radians.
+    #[must_use]
     pub fn new(angle: f32) -> Self {
         Self(angle)
     }

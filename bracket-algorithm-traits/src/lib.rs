@@ -1,4 +1,6 @@
 #![warn(clippy::all, clippy::pedantic, clippy::cargo)]
+#![allow(clippy::multiple_crate_versions)]
+
 //! This crate is part of the `bracket-lib` family.
 //!
 //! It provides traits for you to implement on your map (and other geometric constructs),

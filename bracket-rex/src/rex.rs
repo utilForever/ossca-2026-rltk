@@ -121,14 +121,12 @@ impl XpFile {
         let version = rdr.read_i32::<LittleEndian>()?;
         let num_layers = rdr.read_u32::<LittleEndian>()?;
 
-        let mut layers = Vec::<XpLayer>::new();
-        layers.reserve(num_layers as usize);
+        let mut layers = Vec::with_capacity(num_layers as usize);
         for _ in 0..num_layers {
             let width = rdr.read_u32::<LittleEndian>()? as usize;
             let height = rdr.read_u32::<LittleEndian>()? as usize;
 
-            let mut cells = Vec::<XpCell>::new();
-            cells.reserve(width * height);
+            let mut cells = Vec::with_capacity(width * height);
             for _ in 0..width {
                 // column-major order
                 for _ in 0..height {
