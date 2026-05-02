@@ -52,7 +52,7 @@ impl SimpleBackendWithBackground {
         // Build the background
         for y in 0..self.height {
             let screen_y = top_left.1 + (y as f32 * scale.1);
-            let idx_start = (y * self.width) as usize;
+            let idx_start = ((self.height - 1 - y) * self.width) as usize;
             for (idx, x) in (idx_start..).zip(0..self.width) {
                 let screen_x = top_left.0 + (x as f32 * scale.0);
                 vertices.push([screen_x, screen_y, 0.0]);
@@ -88,7 +88,7 @@ impl SimpleBackendWithBackground {
         // Build the foreground
         for y in 0..self.height {
             let screen_y = top_left.1 + (y as f32 * scale.1);
-            let idx_start = (y * self.width) as usize;
+            let idx_start = ((self.height - 1 - y) * self.width) as usize;
             for (idx, x) in (idx_start..).zip(0..self.width) {
                 let screen_x = top_left.0 + (x as f32 * scale.0);
                 vertices.push([screen_x, screen_y, 0.5]);
