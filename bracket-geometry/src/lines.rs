@@ -10,7 +10,7 @@ pub enum LineAlg {
 
 /// Plots a line between two 2D points and returns a vector of points along the line.
 #[must_use]
-pub fn line2d(algorithm: &LineAlg, start: Point, end: Point) -> Vec<Point> {
+pub fn line2d(algorithm: LineAlg, start: Point, end: Point) -> Vec<Point> {
     match algorithm {
         LineAlg::Bresenham => line2d_bresenham(start, end),
         LineAlg::Vector => line2d_vector(start, end),
