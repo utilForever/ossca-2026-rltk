@@ -48,13 +48,13 @@ impl GameState for State {
             22,
             RGBA::named(WHITE),
             RGBA::named(BLACK),
-            &format!("{} fps", ctx.fps as u32),
+            format!("{} fps", ctx.fps as u32),
         );
         ctx.print_color_centered(
             23,
             RGBA::named(WHITE),
             RGBA::named(BLACK),
-            &format!("{} width", self.width),
+            format!("{} width", self.width),
         );
 
         self.width += 1;

@@ -47,7 +47,7 @@ impl Octant {
     }
 
     #[inline]
-    fn to_octant0(&self, p: Point) -> Point {
+    fn world_to_octant0(&self, p: Point) -> Point {
         match self.0 {
             0 => Point::new(p.x, p.y),
             1 => Point::new(p.y, p.x),
@@ -62,7 +62,7 @@ impl Octant {
     }
 
     #[inline]
-    fn from_octant0(&self, p: Point) -> Point {
+    fn octant0_to_world(&self, p: Point) -> Point {
         match self.0 {
             0 => Point::new(p.x, p.y),
             1 => Point::new(p.y, p.x),
@@ -81,11 +81,12 @@ impl Bresenham {
     /// Creates a new iterator.Yields intermediate points between `start`
     /// and `end`. Does include `start` but not `end`.
     #[inline]
+    #[must_use]
     pub fn new(start: Point, end: Point) -> Bresenham {
         let octant = Octant::from_points(start, end);
 
-        let start = octant.to_octant0(start);
-        let end = octant.to_octant0(end);
+        let start = octant.world_to_octant0(start);
+        let end = octant.world_to_octant0(end);
 
         let dx = end.x - start.x;
         let dy = end.y - start.y;
@@ -101,23 +102,23 @@ impl Bresenham {
         }
     }
 
-        /// Return the next point without checking if we are past `end`.
-        #[inline]
-        pub fn advance(&mut self) -> Point {
-            let p = Point::new(self.x, self.y);
-    
-            if self.diff >= 0 {
-                self.y += 1;
-                self.diff -= self.dx;
-            }
-    
-            self.diff += self.dy;
-    
-            // loop inc
-            self.x += 1;
-    
-            self.octant.from_octant0(p)
+    /// Return the next point without checking if we are past `end`.
+    #[inline]
+    pub fn advance(&mut self) -> Point {
+        let p = Point::new(self.x, self.y);
+
+        if self.diff >= 0 {
+            self.y += 1;
+            self.diff -= self.dx;
         }
+
+        self.diff += self.dy;
+
+        // loop inc
+        self.x += 1;
+
+        self.octant.octant0_to_world(p)
+    }
 }
 
 impl Iterator for Bresenham {
@@ -138,6 +139,7 @@ pub struct BresenhamInclusive(Bresenham);
 impl BresenhamInclusive {
     /// Creates a new iterator. Yields points `start..=end`.
     #[inline]
+    #[must_use]
     pub fn new(start: Point, end: Point) -> Self {
         Self(Bresenham::new(start, end))
     }
@@ -195,7 +197,7 @@ mod tests {
             Point::new(2, 2),
             Point::new(3, 2),
             Point::new(4, 3),
-            Point::new(5, 3)
+            Point::new(5, 3),
         ];
         assert_eq!(res, expected);
 
@@ -218,7 +220,7 @@ mod tests {
             Point::new(4, 3),
             Point::new(3, 3),
             Point::new(2, 2),
-            Point::new(1, 2)
+            Point::new(1, 2),
         ];
         assert_eq!(res, expected);
 
@@ -265,12 +267,12 @@ mod tests {
         let line = Bresenham::new(Point::new(0, 6), Point::new(6, 0));
         let res: Vec<Point> = line.collect();
         assert!(res.len() == 6);
-        res.iter().for_each(|p| {
+        for &p in &res {
             assert!(p.x >= 0);
             assert!(p.x < 7);
             assert!(p.y >= 0);
             assert!(p.y < 7);
-        });
+        }
     }
 
     #[test]
@@ -282,13 +284,13 @@ mod tests {
             let end_point = project_angle(Point::new(0, 0), 8.0, angle) + start_point;
             let line = Bresenham::new(start_point, end_point);
             let res: Vec<Point> = line.collect();
-            assert!(res.len() > 0);
-            res.iter().for_each(|p| {
+            assert!(!res.is_empty());
+            for &p in &res {
                 assert!(p.x >= 10);
                 assert!(p.x < 30);
                 assert!(p.y >= 10);
                 assert!(p.y < 30);
-            });
+            }
             angle.0 += 1.0;
         }
     }

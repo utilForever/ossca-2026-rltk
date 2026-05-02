@@ -21,12 +21,12 @@ impl GameState for State {
         );
         draw_batch.print_color(
             Point::new(40, 1),
-            &format!("FPS: {}", ctx.fps),
+            format!("FPS: {}", ctx.fps),
             ColorPair::new(RGB::named(YELLOW), RGB::named(BLACK)),
         );
         draw_batch.print_color(
             Point::new(40, 2),
-            &format!("Frame Time: {} ms", ctx.frame_time_ms),
+            format!("Frame Time: {} ms", ctx.frame_time_ms),
             ColorPair::new(RGB::named(CYAN), RGB::named(BLACK)),
         );
 

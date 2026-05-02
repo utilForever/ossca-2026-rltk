@@ -1,3 +1,5 @@
+#![allow(clippy::multiple_crate_versions)]
+
 mod astar;
 mod dijkstra;
 mod field_of_view;

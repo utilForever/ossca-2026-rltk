@@ -1,4 +1,6 @@
 // Provides Bracket-Lib style CP437/ASCII terminal options to Bevy
+#![allow(clippy::multiple_crate_versions)]
+
 mod builder;
 mod cp437;
 mod fonts;

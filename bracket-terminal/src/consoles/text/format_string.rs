@@ -7,7 +7,7 @@ pub struct ColoredTextSpans {
 }
 
 fn find_color(col_name: &str) -> RGBA {
-    if let Some(palette) = palette_color(&col_name) {
+    if let Some(palette) = palette_color(col_name) {
         palette
     } else {
         RGBA::from_u8(255, 255, 255, 255)
@@ -22,7 +22,7 @@ impl ColoredTextSpans {
         };
         let mut color_stack = Vec::new();
 
-        for color_span in text.to_owned().split("#[") {
+        for color_span in text.split("#[") {
             if color_span.is_empty() {
                 continue;
             }

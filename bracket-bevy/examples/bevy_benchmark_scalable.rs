@@ -33,5 +33,5 @@ fn tick(ctx: Res<BracketContext>, rng: Res<RandomNumbers>) {
         }
     }
     ctx.draw_box(30, 20, 20, 5, WHITE, BLACK);
-    ctx.print_centered(22, &format!("{} fps", ctx.fps as u32));
+    ctx.print_centered(22, format!("{} fps", ctx.fps as u32));
 }

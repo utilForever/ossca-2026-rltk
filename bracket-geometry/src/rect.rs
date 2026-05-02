@@ -30,6 +30,10 @@ impl Default for Rect {
 
 impl Rect {
     /// Create a new rectangle, specifying X/Y Width/Height
+    ///
+    /// # Panics
+    ///
+    /// This can panic if X, Y, Width, or Height are not convertible to an `i32`.
     pub fn with_size<T>(x: T, y: T, w: T, h: T) -> Rect
     where
         T: TryInto<i32>,
@@ -45,6 +49,10 @@ impl Rect {
     }
 
     /// Create a new rectangle, specifying exact dimensions
+    ///
+    /// # Panics
+    ///
+    /// This can panic if X1, Y1, X2, or Y2 are not convertible to an `i32`.
     pub fn with_exact<T>(x1: T, y1: T, x2: T, y2: T) -> Rect
     where
         T: TryInto<i32>,
@@ -58,6 +66,7 @@ impl Rect {
     }
 
     /// Creates a zero rectangle
+    #[must_use]
     pub fn zero() -> Rect {
         Rect {
             x1: 0,
@@ -76,7 +85,10 @@ impl Rect {
     /// Returns the center of the rectangle
     #[must_use]
     pub fn center(&self) -> Point {
-        Point::new((self.x1 + self.x2) / 2, (self.y1 + self.y2) / 2)
+        Point::new(
+            i32::midpoint(self.x1, self.x2),
+            i32::midpoint(self.y1, self.y2),
+        )
     }
 
     /// Returns true if a point is inside the rectangle

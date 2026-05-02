@@ -1,3 +1,5 @@
+#![allow(clippy::multiple_crate_versions)]
+
 #[cfg(feature = "parsing")]
 #[macro_use]
 extern crate lazy_static;

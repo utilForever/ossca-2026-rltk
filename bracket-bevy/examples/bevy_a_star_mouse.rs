@@ -72,7 +72,7 @@ fn setup(mut commands: Commands, rng: Res<RandomNumbers>) {
 
 impl State {
     pub fn is_exit_valid(&self, x: i32, y: i32) -> bool {
-        if x < 1 || x > 79 || y < 1 || y > 49 {
+        if !(1..=79).contains(&x) || !(1..=49).contains(&y) {
             return false;
         }
         let idx = (y * 80) + x;
@@ -199,7 +199,7 @@ fn tick(ctx: Res<BracketContext>, mut state: ResMut<State>, mouse: Res<Input<Mou
             "X",
             ColorPair::new(RGB::from_f32(0.0, 1.0, 1.0), RGB::from_f32(0.0, 1.0, 1.0)),
         );
-        if state.map[mouse_idx as usize] != TileType::Wall {
+        if state.map[mouse_idx] != TileType::Wall {
             let path = a_star_search(state.player_position, mouse_idx, &*state);
             if path.success {
                 for loc in path.steps.iter().skip(1) {
@@ -219,7 +219,7 @@ fn tick(ctx: Res<BracketContext>, mut state: ResMut<State>, mouse: Res<Input<Mou
             }
         }
     } else {
-        state.player_position = state.path.steps[0] as usize;
+        state.player_position = state.path.steps[0];
         state.path.steps.remove(0);
         if state.path.steps.is_empty() {
             state.mode = Mode::Waiting;

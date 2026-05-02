@@ -86,15 +86,15 @@ impl ScreenScaler {
 
     pub(crate) fn top_left(&self) -> (f32, f32) {
         (
-            0.0 - (self.screen.0 / 2.0) + (self.x_gutter as f32 / 2.0),
-            0.0 - (self.screen.1 / 2.0) + (self.y_gutter as f32 / 2.0),
+            0.0 - (self.screen.0 / 2.0) + (self.x_gutter / 2.0),
+            0.0 - (self.screen.1 / 2.0) + (self.y_gutter / 2.0),
         )
     }
 
     pub(crate) fn calc_step(&self, width: i32, height: i32) -> (f32, f32) {
         (
-            (self.screen.0 - self.x_gutter as f32) / width as f32,
-            (self.screen.1 - self.y_gutter as f32) / height as f32,
+            (self.screen.0 - self.x_gutter) / width as f32,
+            (self.screen.1 - self.y_gutter) / height as f32,
         )
     }
 
@@ -115,7 +115,7 @@ impl ScreenScaler {
         );
         (
             i32::clamp(step_pos.0 as i32, 0, width - 1),
-            i32::clamp(height as i32 - step_pos.1 as i32 - 1, 0, height - 1),
+            i32::clamp(height - step_pos.1 as i32 - 1, 0, height - 1),
         )
     }
 }

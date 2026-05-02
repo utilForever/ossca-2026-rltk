@@ -37,19 +37,23 @@ struct State {
 const WIDTH: i32 = 80;
 const HEIGHT: i32 = 50;
 const DEPTH: i32 = 128;
-const LAYER_SIZE: usize = (WIDTH * HEIGHT) as usize;
-const NUM_TILES: usize = LAYER_SIZE * DEPTH as usize;
+const WIDTH_USIZE: usize = WIDTH as usize;
+const HEIGHT_USIZE: usize = HEIGHT as usize;
+const DEPTH_USIZE: usize = DEPTH as usize;
+const LAYER_SIZE: usize = WIDTH_USIZE * HEIGHT_USIZE;
+const NUM_TILES: usize = LAYER_SIZE * DEPTH_USIZE;
 
 pub fn xyz_idx(x: i32, y: i32, z: i32) -> usize {
-    (LAYER_SIZE * z as usize) + (y as usize * WIDTH as usize) + x as usize
+    (LAYER_SIZE * z as usize) + (y as usize * WIDTH_USIZE) + x as usize
 }
 
 pub fn idx_xyz(idx: usize) -> (i32, i32, i32) {
-    let z = (idx / LAYER_SIZE) as i32;
-    let y = ((idx as i32 - (z * LAYER_SIZE as i32) as i32) / WIDTH as i32) as i32;
-    let x = ((idx as i32 - (z * LAYER_SIZE as i32) as i32) % WIDTH as i32) as i32;
+    let z = idx / LAYER_SIZE;
+    let idx_in_layer = idx - (z * LAYER_SIZE);
+    let y = idx_in_layer / WIDTH_USIZE;
+    let x = idx_in_layer % WIDTH_USIZE;
 
-    (x, y, z)
+    (x as i32, y as i32, z as i32)
 }
 
 impl Default for State {
@@ -119,24 +123,27 @@ impl Default for State {
 
 impl State {
     pub fn is_exit_valid(&self, x: i32, y: i32, z: i32) -> bool {
-        if x < 1 || x > WIDTH - 1 || y < 1 || y > HEIGHT - 1 || z < 1 || z > LAYER_SIZE as i32 - 1 {
+        if !(1..=WIDTH - 1).contains(&x)
+            || !(1..=HEIGHT - 1).contains(&y)
+            || !(1..=DEPTH - 1).contains(&z)
+        {
             return false;
         }
         let idx = xyz_idx(x, y, z);
-        self.map[idx as usize] == TileType::Floor
-            || self.map[idx as usize] == TileType::Ramp
-            || self.map[idx as usize] == TileType::RampDown
+        self.map[idx] == TileType::Floor
+            || self.map[idx] == TileType::Ramp
+            || self.map[idx] == TileType::RampDown
     }
 }
 
 impl BaseMap for State {
     fn is_opaque(&self, idx: usize) -> bool {
-        self.map[idx as usize] == TileType::Wall
+        self.map[idx] == TileType::Wall
     }
 
     fn get_available_exits(&self, idx: usize) -> SmallVec<[(usize, f32); 10]> {
         let mut exits = SmallVec::new();
-        let (x, y, z) = idx_xyz(idx as usize);
+        let (x, y, z) = idx_xyz(idx);
 
         // Cardinal directions
         if self.is_exit_valid(x - 1, y, z) {
@@ -146,31 +153,31 @@ impl BaseMap for State {
             exits.push((idx + 1, 1.0))
         };
         if self.is_exit_valid(x, y - 1, z) {
-            exits.push((idx - WIDTH as usize, 1.0))
+            exits.push((idx - WIDTH_USIZE, 1.0))
         };
         if self.is_exit_valid(x, y + 1, z) {
-            exits.push((idx + WIDTH as usize, 1.0))
+            exits.push((idx + WIDTH_USIZE, 1.0))
         };
 
         // Diagonals
         if self.is_exit_valid(x - 1, y - 1, z) {
-            exits.push(((idx - WIDTH as usize) - 1, 1.4));
+            exits.push(((idx - WIDTH_USIZE) - 1, 1.4));
         }
         if self.is_exit_valid(x + 1, y - 1, z) {
-            exits.push(((idx - WIDTH as usize) + 1, 1.4));
+            exits.push(((idx - WIDTH_USIZE) + 1, 1.4));
         }
         if self.is_exit_valid(x - 1, y + 1, z) {
-            exits.push(((idx + WIDTH as usize) - 1, 1.4));
+            exits.push(((idx + WIDTH_USIZE) - 1, 1.4));
         }
         if self.is_exit_valid(x + 1, y + 1, z) {
-            exits.push(((idx + WIDTH as usize) + 1, 1.4));
+            exits.push(((idx + WIDTH_USIZE) + 1, 1.4));
         }
 
         // Up and down for ramps
-        if self.map[idx as usize] == TileType::Ramp {
+        if self.map[idx] == TileType::Ramp {
             exits.push((idx + LAYER_SIZE, 1.4));
         }
-        if self.map[idx as usize] == TileType::RampDown {
+        if self.map[idx] == TileType::RampDown {
             exits.push((idx - LAYER_SIZE, 1.4));
         }
 
@@ -280,7 +287,7 @@ fn tick(ctx: Res<BracketContext>, mut state: Local<State>, mouse: Res<Input<Mous
         let mx = mouse_pos.x;
         let my = mouse_pos.y;
         let mut mz = 1;
-        for altitude in 1..DEPTH as i32 - 1 {
+        for altitude in 1..DEPTH - 1 {
             let idx = xyz_idx(mx, my, altitude);
             if state.map[idx] == TileType::Floor {
                 mz = altitude;
@@ -288,13 +295,11 @@ fn tick(ctx: Res<BracketContext>, mut state: Local<State>, mouse: Res<Input<Mous
         }
         let mouse_idx = xyz_idx(mx, my, mz);
         let player_idx = xyz_idx(ppos.0, ppos.1, ppos.2);
-        if state.map[mouse_idx as usize] != TileType::Wall
-            && state.map[mouse_idx as usize] != TileType::OpenSpace
-        {
+        if state.map[mouse_idx] != TileType::Wall && state.map[mouse_idx] != TileType::OpenSpace {
             let path = a_star_search(player_idx, mouse_idx, &*state);
             if path.success {
                 for loc in path.steps.iter().skip(1) {
-                    let (x, y, _z) = idx_xyz(*loc as usize);
+                    let (x, y, _z) = idx_xyz(*loc);
                     ctx.print_color(
                         x,
                         y,
@@ -311,7 +316,7 @@ fn tick(ctx: Res<BracketContext>, mut state: Local<State>, mouse: Res<Input<Mous
             }
         }
     } else {
-        state.player_position = state.path.steps[0] as usize;
+        state.player_position = state.path.steps[0];
         state.path.steps.remove(0);
         if state.path.steps.is_empty() {
             state.mode = Mode::Waiting;

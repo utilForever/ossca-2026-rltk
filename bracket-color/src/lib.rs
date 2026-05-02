@@ -1,4 +1,5 @@
 #![warn(clippy::all, clippy::pedantic, clippy::cargo)]
+#![allow(clippy::multiple_crate_versions)]
 
 //! This crate is part of the `bracket-lib` family.
 //!
@@ -25,10 +26,6 @@
 //! ```
 //!
 //! If you use the `serde` feature flag, the exposed types are serializable/de-serializable.
-
-#[cfg(feature = "palette")]
-#[macro_use]
-extern crate lazy_static;
 
 /// Import color pair support
 pub mod color_pair;

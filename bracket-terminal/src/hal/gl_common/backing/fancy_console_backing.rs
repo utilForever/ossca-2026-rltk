@@ -80,9 +80,9 @@ impl FancyConsoleBackend {
         //let step_x: f32 = scale * 2.0 / width as f32;
         //let step_y: f32 = scale * 2.0 / height as f32;
 
-        let screen_x_start: f32 = -1.0 * scale
+        let screen_x_start: f32 = -scale
             - 2.0 * (scale_center.0 - width as i32 / 2) as f32 * (scale - 1.0) / width as f32;
-        let screen_y_start: f32 = -1.0 * scale
+        let screen_y_start: f32 = -scale
             + 2.0 * (scale_center.1 - height as i32 / 2) as f32 * (scale - 1.0) / height as f32;
 
         let (step_x, step_y) = {

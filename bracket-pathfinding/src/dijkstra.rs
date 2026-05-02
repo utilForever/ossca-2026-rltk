@@ -5,7 +5,6 @@ use rayon::prelude::*;
 use smallvec::SmallVec;
 use std::collections::VecDeque;
 use std::convert::TryInto;
-use std::f32::MAX;
 
 /// Representation of a Dijkstra flow map.
 /// map is a vector of floats, having a size equal to size_x * size_y (one per tile).
@@ -56,7 +55,7 @@ impl DijkstraMap {
     {
         let sz_x: usize = size_x.try_into().ok().unwrap();
         let sz_y: usize = size_y.try_into().ok().unwrap();
-        let result: Vec<f32> = vec![MAX; sz_x * sz_y];
+        let result: Vec<f32> = vec![f32::MAX; sz_x * sz_y];
         let mut d = DijkstraMap {
             map: result,
             size_x: sz_x,
@@ -83,7 +82,7 @@ impl DijkstraMap {
     {
         let sz_x: usize = size_x.try_into().ok().unwrap();
         let sz_y: usize = size_y.try_into().ok().unwrap();
-        let result: Vec<f32> = vec![MAX; sz_x * sz_y];
+        let result: Vec<f32> = vec![f32::MAX; sz_x * sz_y];
         let mut d = DijkstraMap {
             map: result,
             size_x: sz_x,
@@ -101,7 +100,7 @@ impl DijkstraMap {
     {
         let sz_x: usize = size_x.try_into().ok().unwrap();
         let sz_y: usize = size_y.try_into().ok().unwrap();
-        let result: Vec<f32> = vec![MAX; sz_x * sz_y];
+        let result: Vec<f32> = vec![f32::MAX; sz_x * sz_y];
         DijkstraMap {
             map: result,
             size_x: sz_x,
@@ -118,7 +117,7 @@ impl DijkstraMap {
 
     #[cfg(not(feature = "threaded"))]
     pub fn clear(dm: &mut DijkstraMap) {
-        dm.map.iter_mut().for_each(|x| *x = MAX);
+        dm.map.iter_mut().for_each(|x| *x = f32::MAX);
     }
 
     #[cfg(feature = "threaded")]
@@ -146,7 +145,7 @@ impl DijkstraMap {
         if threaded == RunThreaded::True {
             return;
         }
-        let mapsize: usize = (dm.size_x * dm.size_y) as usize;
+        let mapsize: usize = dm.size_x * dm.size_y;
         let mut open_list: VecDeque<(usize, f32)> = VecDeque::with_capacity(mapsize);
 
         for start in starts {
@@ -177,7 +176,7 @@ impl DijkstraMap {
     /// algorithm required to support that.
     /// Automatically branches to a parallel version if you provide more than 4 starting points
     pub fn build_weighted(dm: &mut DijkstraMap, starts: &[(usize, f32)], map: &dyn BaseMap) {
-        let mapsize: usize = (dm.size_x * dm.size_y) as usize;
+        let mapsize: usize = dm.size_x * dm.size_y;
         let mut open_list: VecDeque<(usize, f32)> = VecDeque::with_capacity(mapsize);
 
         for start in starts {
@@ -284,11 +283,7 @@ impl DijkstraMap {
             return None;
         }
 
-        exits.sort_by(|a, b| {
-            dm.map[a.0 as usize]
-                .partial_cmp(&dm.map[b.0 as usize])
-                .unwrap()
-        });
+        exits.sort_by(|a, b| dm.map[a.0].partial_cmp(&dm.map[b.0]).unwrap());
 
         Some(exits[0].0)
     }
@@ -330,11 +325,7 @@ impl DijkstraMap {
             return None;
         }
 
-        exits.sort_by(|a, b| {
-            dm.map[b.0 as usize]
-                .partial_cmp(&dm.map[a.0 as usize])
-                .unwrap()
-        });
+        exits.sort_by(|a, b| dm.map[b.0].partial_cmp(&dm.map[a.0]).unwrap());
 
         Some(exits[0].0)
     }

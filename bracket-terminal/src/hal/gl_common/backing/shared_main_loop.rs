@@ -64,7 +64,7 @@ pub(crate) fn rebuild_consoles() {
         let cons = &mut bi.consoles[i];
         match c {
             ConsoleBacking::Simple { backing } => {
-                let mut sc = cons
+                let sc = cons
                     .console
                     .as_any_mut()
                     .downcast_mut::<SimpleConsole>()
@@ -85,7 +85,7 @@ pub(crate) fn rebuild_consoles() {
                 }
             }
             ConsoleBacking::Sparse { backing } => {
-                let mut sc = bi.consoles[i]
+                let sc = bi.consoles[i]
                     .console
                     .as_any_mut()
                     .downcast_mut::<SparseConsole>()
@@ -106,13 +106,13 @@ pub(crate) fn rebuild_consoles() {
                 }
             }
             ConsoleBacking::Fancy { backing } => {
-                let mut fc = bi.consoles[i]
+                let fc = bi.consoles[i]
                     .console
                     .as_any_mut()
                     .downcast_mut::<FlexiConsole>()
                     .unwrap();
                 if fc.is_dirty {
-                    fc.tiles.sort_by(|a, b| a.z_order.cmp(&b.z_order));
+                    fc.tiles.sort_by_key(|a| a.z_order);
                     backing.rebuild_vertices(
                         fc.height,
                         fc.width,
@@ -127,13 +127,13 @@ pub(crate) fn rebuild_consoles() {
                 }
             }
             ConsoleBacking::Sprite { backing } => {
-                let mut sc = bi.consoles[i]
+                let sc = bi.consoles[i]
                     .console
                     .as_any_mut()
                     .downcast_mut::<SpriteConsole>()
                     .unwrap();
                 if sc.is_dirty {
-                    sc.sprites.sort_by(|a, b| a.z_order.cmp(&b.z_order));
+                    sc.sprites.sort_by_key(|a| a.z_order);
                     backing.rebuild_vertices(
                         sc.height,
                         sc.width,
@@ -165,8 +165,16 @@ pub(crate) fn render_consoles() -> BResult<()> {
                 backing.gl_draw(font, shader)?;
             }
             ConsoleBacking::Sprite { backing } => {
-                let sprite_sheet = cons.console.as_any().downcast_ref::<SpriteConsole>().unwrap().sprite_sheet;
-                backing.gl_draw(bi.sprite_sheets[sprite_sheet].backing.as_ref().unwrap(), shader)?;
+                let sprite_sheet = cons
+                    .console
+                    .as_any()
+                    .downcast_ref::<SpriteConsole>()
+                    .unwrap()
+                    .sprite_sheet;
+                backing.gl_draw(
+                    bi.sprite_sheets[sprite_sheet].backing.as_ref().unwrap(),
+                    shader,
+                )?;
             }
         }
     }

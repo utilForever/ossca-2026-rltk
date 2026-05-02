@@ -23,7 +23,7 @@ impl GameState for State {
         ctx.printer(
             1,
             2,
-            &format!("#[pink]FPS: #[]{}", ctx.fps),
+            format!("#[pink]FPS: #[]{}", ctx.fps),
             TextAlign::Left,
             None,
         );

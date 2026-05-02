@@ -1,3 +1,5 @@
+#![allow(clippy::multiple_crate_versions)]
+
 #[macro_use]
 extern crate lazy_static;
 mod bterm;

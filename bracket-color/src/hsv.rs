@@ -41,9 +41,9 @@ impl HSV {
     }
 
     /// Constructs a new HSV color, from 3 32-bit floats
-    /// 
+    ///
     /// # Arguments
-    /// 
+    ///
     /// * `h` - The hue (0..1) to use.
     /// * `s` - The saturation (0..1) to use.
     /// * `v` - The value (0..1) to use.
@@ -61,11 +61,11 @@ impl HSV {
     }
 
     /// Converts an HSV triple to an RGB triple
+    #[inline]
+    #[must_use]
     #[allow(clippy::many_single_char_names)] // I like my short names for this one
     #[allow(clippy::cast_precision_loss)]
     #[allow(clippy::cast_possible_truncation)]
-    #[inline]
-    #[must_use]
     pub fn to_rgb(&self) -> RGB {
         let h = self.h;
         let s = self.s;
@@ -120,14 +120,14 @@ impl HSV {
     }
 
     /// Progress smoothly between two colors, in the HSV color space.
-    /// 
+    ///
     /// # Arguments
-    /// 
+    ///
     /// * `color` - the target color.
     /// * `percent` - the percentage (0..1) of the starting (self) and target color to use.
-    /// 
+    ///
     /// # Example
-    /// 
+    ///
     /// ```rust
     /// use bracket_color::prelude::*;
     /// let red = RGB::named(RED);
@@ -154,9 +154,9 @@ mod tests {
     // Tests that we make an HSV triplet at defaults and it is black.
     fn make_hsv_minimal() {
         let black = HSV::new();
-        assert!(black.h < std::f32::EPSILON);
-        assert!(black.s < std::f32::EPSILON);
-        assert!(black.v < std::f32::EPSILON);
+        assert!(black.h < f32::EPSILON);
+        assert!(black.s < f32::EPSILON);
+        assert!(black.v < f32::EPSILON);
     }
 
     #[test]
@@ -164,9 +164,9 @@ mod tests {
     fn convert_red_to_hsv() {
         let red = RGB::from_f32(1.0, 0.0, 0.0);
         let hsv = red.to_hsv();
-        assert!(hsv.h < std::f32::EPSILON);
-        assert!(f32::abs(hsv.s - 1.0) < std::f32::EPSILON);
-        assert!(f32::abs(hsv.v - 1.0) < std::f32::EPSILON);
+        assert!(hsv.h < f32::EPSILON);
+        assert!(f32::abs(hsv.s - 1.0) < f32::EPSILON);
+        assert!(f32::abs(hsv.v - 1.0) < f32::EPSILON);
     }
 
     #[test]
@@ -174,9 +174,9 @@ mod tests {
     fn convert_green_to_hsv() {
         let green = RGB::from_f32(0.0, 1.0, 0.0);
         let hsv = green.to_hsv();
-        assert!(f32::abs(hsv.h - 120.0 / 360.0) < std::f32::EPSILON);
-        assert!(f32::abs(hsv.s - 1.0) < std::f32::EPSILON);
-        assert!(f32::abs(hsv.v - 1.0) < std::f32::EPSILON);
+        assert!(f32::abs(hsv.h - 120.0 / 360.0) < f32::EPSILON);
+        assert!(f32::abs(hsv.s - 1.0) < f32::EPSILON);
+        assert!(f32::abs(hsv.v - 1.0) < f32::EPSILON);
     }
 
     #[test]
@@ -184,9 +184,9 @@ mod tests {
     fn convert_blue_to_hsv() {
         let blue = RGB::from_f32(0.0, 0.0, 1.0);
         let hsv = blue.to_hsv();
-        assert!(f32::abs(hsv.h - 240.0 / 360.0) < std::f32::EPSILON);
-        assert!(f32::abs(hsv.s - 1.0) < std::f32::EPSILON);
-        assert!(f32::abs(hsv.v - 1.0) < std::f32::EPSILON);
+        assert!(f32::abs(hsv.h - 240.0 / 360.0) < f32::EPSILON);
+        assert!(f32::abs(hsv.s - 1.0) < f32::EPSILON);
+        assert!(f32::abs(hsv.v - 1.0) < f32::EPSILON);
     }
 
     #[test]
@@ -194,9 +194,9 @@ mod tests {
     fn convert_olive_to_hsv() {
         let grey = RGB::from_u8(128, 128, 0);
         let hsv = grey.to_hsv();
-        assert!(f32::abs(hsv.h - 60.0 / 360.0) < std::f32::EPSILON);
-        assert!(f32::abs(hsv.s - 1.0) < std::f32::EPSILON);
-        assert!(f32::abs(hsv.v - 0.5019_608) < std::f32::EPSILON);
+        assert!(f32::abs(hsv.h - 60.0 / 360.0) < f32::EPSILON);
+        assert!(f32::abs(hsv.s - 1.0) < f32::EPSILON);
+        assert!(f32::abs(hsv.v - 0.5019_608) < f32::EPSILON);
     }
 
     #[test]

@@ -1,8 +1,8 @@
 use crate::prelude::Point;
 
 /// An implementation of [Bresenham's circle algorithm].
-/// [Bresenham's circle algorithm]: http://members.chello.at/~easyfilter/bresenham.html
-/// Derived from the line_drawing crate, but specialized to use BTerm's types.
+/// [Bresenham's circle algorithm]: <http://members.chello.at/~easyfilter/bresenham.html>
+/// Derived from the `line_drawing` crate, but specialized to use `BTerm`'s types.
 pub struct BresenhamCircle {
     x: i32,
     y: i32,
@@ -14,12 +14,13 @@ pub struct BresenhamCircle {
 
 impl BresenhamCircle {
     /// Creates a new circle, using the Bresenham Circle algorithm.
-    /// 
+    ///
     /// # Arguments
-    /// 
+    ///
     /// * `center` - the center of the circle.
     /// * `radius` - the radius of the desired circle.
     #[inline]
+    #[must_use]
     #[allow(dead_code)]
     pub fn new(center: Point, radius: i32) -> Self {
         Self {
@@ -83,12 +84,13 @@ pub struct BresenhamCircleNoDiag {
 
 impl BresenhamCircleNoDiag {
     /// Creates a Bresenham Circle without allowing diagonal gaps.
-    /// 
+    ///
     /// # Arguments
-    /// 
+    ///
     /// * `center` - the center of the circle
     /// * `radius` - the radius of the circle
     #[inline]
+    #[must_use]
     #[allow(dead_code)]
     pub fn new(center: Point, radius: i32) -> Self {
         Self {

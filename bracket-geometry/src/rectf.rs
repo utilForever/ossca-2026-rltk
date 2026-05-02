@@ -29,6 +29,10 @@ impl Default for RectF {
 
 impl RectF {
     /// Create a new rectangle, specifying X/Y Width/Height
+    ///
+    /// # Panics
+    ///
+    /// This can panic if X, Y, Width, or Height are not convertible to an `f32`.
     pub fn with_size<T>(x: T, y: T, w: T, h: T) -> RectF
     where
         T: TryInto<f32>,
@@ -44,6 +48,10 @@ impl RectF {
     }
 
     /// Create a new rectangle, specifying exact dimensions
+    ///
+    /// # Panics
+    ///
+    /// This can panic if X1, Y1, X2, or Y2 are not convertible to an `f32`.
     pub fn with_exact<T>(x1: T, y1: T, x2: T, y2: T) -> RectF
     where
         T: TryInto<f32>,
@@ -77,8 +85,8 @@ impl RectF {
     #[must_use]
     pub fn center(&self) -> PointF {
         PointF {
-            x: (self.x1 + self.x2) / 2.0,
-            y: (self.y1 + self.y2) / 2.0,
+            x: f32::midpoint(self.x1, self.x2),
+            y: f32::midpoint(self.y1, self.y2),
         }
     }
 

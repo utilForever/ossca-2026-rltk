@@ -1,3 +1,5 @@
+#![allow(clippy::multiple_crate_versions)]
+
 mod rex;
 mod xpcolor;
 

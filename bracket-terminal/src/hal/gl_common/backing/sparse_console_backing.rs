@@ -61,7 +61,7 @@ impl SparseConsoleBackend {
         offset_y: f32,
         scale: f32,
         scale_center: (i32, i32),
-        tiles: &Vec<SparseTile>,
+        tiles: &[SparseTile],
         font_scaler: FontScaler,
         needs_resize: bool,
     ) {
@@ -90,9 +90,9 @@ impl SparseConsoleBackend {
         //let step_y: f32 = scale * 2.0 / height as f32;
 
         let mut index_count: i32 = 0;
-        let screen_x_start: f32 = -1.0 * scale
+        let screen_x_start: f32 = -scale
             - 2.0 * (scale_center.0 - width as i32 / 2) as f32 * (scale - 1.0) / width as f32;
-        let screen_y_start: f32 = -1.0 * scale
+        let screen_y_start: f32 = -scale
             + 2.0 * (scale_center.1 - height as i32 / 2) as f32 * (scale - 1.0) / height as f32;
         for t in tiles.iter() {
             let x = t.idx % width as usize;
@@ -153,7 +153,7 @@ impl SparseConsoleBackend {
         }
 
         self.vao.upload_buffers();
-        self.previous_console = Some(tiles.clone());
+        self.previous_console = Some(tiles.to_owned());
     }
 
     pub fn gl_draw(&mut self, font: &Font, shader: &Shader) -> BResult<()> {

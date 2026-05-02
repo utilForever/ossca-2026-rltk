@@ -21,6 +21,7 @@ pub struct DisplayConsole {
     pub font_index: usize,
 }
 
+#[derive(Default)]
 pub struct BTermInternal {
     pub fonts: Vec<Font>,
     pub shaders: Vec<Shader>,
@@ -30,17 +31,6 @@ pub struct BTermInternal {
 
 impl BTermInternal {
     pub fn new() -> Self {
-        Self {
-            fonts: Vec::new(),
-            shaders: Vec::new(),
-            consoles: Vec::new(),
-            sprite_sheets: Vec::new(),
-        }
-    }
-}
-
-impl Default for BTermInternal {
-    fn default() -> Self {
         Self {
             fonts: Vec::new(),
             shaders: Vec::new(),
@@ -230,12 +220,12 @@ impl BTerm {
 
     ///
     #[cfg(any(feature = "curses", feature = "cross_term"))]
-    fn pixel_to_char_pos(&self, pos: (i32, i32), _console: &Box<dyn Console>) -> (i32, i32) {
+    fn pixel_to_char_pos(&self, pos: (i32, i32), _console: &dyn Console) -> (i32, i32) {
         pos
     }
 
     #[cfg(not(any(feature = "curses", feature = "cross_term")))]
-    fn pixel_to_char_pos(&self, pos: (i32, i32), console: &Box<dyn Console>) -> (i32, i32) {
+    fn pixel_to_char_pos(&self, pos: (i32, i32), console: &dyn Console) -> (i32, i32) {
         let max_sizes = console.get_char_size();
         let (scale, center_x, center_y) = console.get_scale();
 
@@ -275,14 +265,14 @@ impl BTerm {
         let bi = BACKEND_INTERNAL.lock();
         let active_console = &bi.consoles[self.active_console].console;
 
-        self.pixel_to_char_pos(self.mouse_pos, active_console)
+        self.pixel_to_char_pos(self.mouse_pos, active_console.as_ref())
     }
 
     /// Applies the current physical mouse position to the active console, and translates the coordinates into that console's coordinate space.
     pub fn mouse_point(&self) -> Point {
         let bi = BACKEND_INTERNAL.lock();
         let active_console = &bi.consoles[self.active_console].console;
-        let char_pos = self.pixel_to_char_pos(self.mouse_pos, active_console);
+        let char_pos = self.pixel_to_char_pos(self.mouse_pos, active_console.as_ref());
 
         Point::new(char_pos.0, char_pos.1)
     }
@@ -377,7 +367,7 @@ impl BTerm {
         input.on_mouse_pixel_position(x, y);
         // TODO: Console cascade!
         for (i, cons) in bi.consoles.iter().enumerate() {
-            let char_pos = self.pixel_to_char_pos(self.mouse_pos, &cons.console);
+            let char_pos = self.pixel_to_char_pos(self.mouse_pos, cons.console.as_ref());
 
             input.on_mouse_tile_position(i, char_pos.0, char_pos.1);
         }

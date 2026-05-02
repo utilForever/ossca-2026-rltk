@@ -1,6 +1,5 @@
 use bevy::prelude::*;
 use bracket_bevy::prelude::*;
-use std::cmp::{max, min};
 
 mod components;
 pub use components::*;
@@ -9,7 +8,6 @@ pub use map::*;
 mod player;
 pub use player::*;
 mod rect;
-pub use rect::*;
 
 fn main() {
     App::new()
@@ -42,26 +40,20 @@ fn tick(
     ctx: Res<BracketContext>,
     map: Res<Map>,
     keyboard: Res<Input<KeyCode>>,
-    mut queries: ParamSet<(
-        Query<&mut Position, With<Player>>,
-        Query<(&Position, &Renderable)>,
-    )>,
+    mut player_query: Query<(&mut Position, &Renderable), With<Player>>,
 ) {
     ctx.cls();
 
     let delta = player_input(&keyboard);
+    let (mut pos, render) = player_query.single_mut();
     if delta != (0, 0) {
-        let mut player_query = queries.p0();
-        let mut pos = player_query.single_mut();
         let destination_idx = xy_idx(pos.x + delta.0, pos.y + delta.1);
         if map.0[destination_idx] != TileType::Wall {
-            pos.x = min(79, max(0, pos.x + delta.0));
-            pos.y = min(49, max(0, pos.y + delta.1));
+            pos.x = (pos.x + delta.0).clamp(0, 79);
+            pos.y = (pos.y + delta.1).clamp(0, 49);
         }
     }
 
     draw_map(&map.0, &ctx);
-    for (pos, render) in queries.p1().iter() {
-        ctx.set(pos.x, pos.y, render.fg, render.bg, render.glyph);
-    }
+    ctx.set(pos.x, pos.y, render.fg, render.bg, render.glyph);
 }

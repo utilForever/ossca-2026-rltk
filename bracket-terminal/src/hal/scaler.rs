@@ -172,18 +172,18 @@ impl ScreenScaler {
         let total_gutter = (self.desired_gutter as f32 * self.scale_factor) as u32;
         let half_gutter = total_gutter / 2;
 
-        let (extra_left, extra_right) = if self.smooth_gutter_x % 2 == 0 {
+        let (extra_left, extra_right) = if self.smooth_gutter_x.is_multiple_of(2) {
             (self.smooth_gutter_x / 2, self.smooth_gutter_x / 2)
         } else {
             ((self.smooth_gutter_x / 2) + 1, self.smooth_gutter_x / 2)
         };
-        let (extra_top, extra_bottom) = if self.smooth_gutter_y % 2 == 0 {
+        let (extra_top, extra_bottom) = if self.smooth_gutter_y.is_multiple_of(2) {
             (self.smooth_gutter_y / 2, self.smooth_gutter_y / 2)
         } else {
             ((self.smooth_gutter_y / 2) + 1, self.smooth_gutter_y / 2)
         };
 
-        if total_gutter % 2 == 0 {
+        if total_gutter.is_multiple_of(2) {
             self.gutter_left = half_gutter + extra_left;
             self.gutter_right = half_gutter + extra_right;
             self.gutter_top = half_gutter + extra_top;
