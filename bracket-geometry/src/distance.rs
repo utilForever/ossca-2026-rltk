@@ -32,9 +32,10 @@ impl DistanceAlg {
     #[must_use]
     pub fn distance3d(self, start: Point3, end: Point3) -> f32 {
         match self {
-            DistanceAlg::Pythagoras | DistanceAlg::Chebyshev => distance3d_pythagoras(start, end),
+            DistanceAlg::Pythagoras => distance3d_pythagoras(start, end),
             DistanceAlg::PythagorasSquared => distance3d_pythagoras_squared(start, end),
             DistanceAlg::Manhattan => distance3d_manhattan(start, end),
+            DistanceAlg::Chebyshev => distance3d_chebyshev(start, end),
             DistanceAlg::Diagonal => distance3d_diagonal(start, end),
         }
     }
@@ -114,6 +115,15 @@ fn distance2d_diagonal(start: Point, end: Point) -> f32 {
 #[allow(clippy::cast_precision_loss)]
 #[allow(clippy::cast_possible_truncation)]
 fn distance3d_diagonal(start: Point3, end: Point3) -> f32 {
+    i32::max(
+        (start.x - end.x).abs(),
+        i32::max((start.y - end.y).abs(), (start.z - end.z).abs()),
+    ) as f32
+}
+
+#[allow(clippy::cast_precision_loss)]
+#[allow(clippy::cast_possible_truncation)]
+fn distance3d_chebyshev(start: Point3, end: Point3) -> f32 {
     i32::max(
         (start.x - end.x).abs(),
         i32::max((start.y - end.y).abs(), (start.z - end.z).abs()),
@@ -231,6 +241,18 @@ mod tests {
 
         d = DistanceAlg::Chebyshev.distance2d(Point::new(0, 0), Point::new(5, 5));
         assert!(f32::abs(d - 5.0) < f32::EPSILON);
+    }
+
+    #[test]
+    fn test_chebyshev_distance3d() {
+        let mut d = DistanceAlg::Chebyshev.distance3d(Point3::new(0, 0, 0), Point3::new(5, 0, 0));
+        assert!(f32::abs(d - 5.0) < f32::EPSILON);
+
+        d = DistanceAlg::Chebyshev.distance3d(Point3::new(0, 0, 0), Point3::new(5, 5, 5));
+        assert!(f32::abs(d - 5.0) < f32::EPSILON);
+
+        d = DistanceAlg::Chebyshev.distance3d(Point3::new(0, 0, 0), Point3::new(2, 7, 4));
+        assert!(f32::abs(d - 7.0) < f32::EPSILON);
     }
 
     #[test]
