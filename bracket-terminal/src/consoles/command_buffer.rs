@@ -858,7 +858,7 @@ impl DrawBatch {
 /// Submits the current batch to the BTerm buffer and empties it
 pub fn render_draw_buffer(bterm: &mut BTerm) -> BResult<()> {
     let mut buffer = COMMAND_BUFFER.lock();
-    buffer.sort_unstable_by_key(|a| a.0);
+    buffer.sort_by_key(|a| a.0);
     buffer.iter().for_each(|(_, batch)| {
         batch.iter().for_each(|cmd| match cmd {
             DrawCommand::ClearScreen => bterm.cls(),
