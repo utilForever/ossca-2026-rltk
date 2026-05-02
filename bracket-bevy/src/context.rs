@@ -432,7 +432,7 @@ impl BracketContext {
     /// Submit all draw batches for rendering.
     pub fn render_all_batches(&mut self) {
         let mut batches = self.command_buffers.lock();
-        batches.sort_unstable_by_key(|a| a.0);
+        batches.sort_by_key(|a| a.0);
 
         batches.iter().for_each(|(_, batch)| {
             batch.batch.iter().for_each(|(_, cmd)| match cmd {
