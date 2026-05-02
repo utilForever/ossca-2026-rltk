@@ -109,25 +109,27 @@ fn distance3d_pythagoras(start: Point3, end: Point3) -> f32 {
 #[allow(clippy::cast_precision_loss)]
 #[allow(clippy::cast_possible_truncation)]
 fn distance2d_diagonal(start: Point, end: Point) -> f32 {
-    i32::max((start.x - end.x).abs(), (start.y - end.y).abs()) as f32
+    let dx = start.x.abs_diff(end.x);
+    let dy = start.y.abs_diff(end.y);
+    u32::max(dx, dy) as f32
 }
 
 #[allow(clippy::cast_precision_loss)]
 #[allow(clippy::cast_possible_truncation)]
 fn distance3d_diagonal(start: Point3, end: Point3) -> f32 {
-    i32::max(
-        (start.x - end.x).abs(),
-        i32::max((start.y - end.y).abs(), (start.z - end.z).abs()),
-    ) as f32
+    let dx = start.x.abs_diff(end.x);
+    let dy = start.y.abs_diff(end.y);
+    let dz = start.z.abs_diff(end.z);
+    u32::max(dx, u32::max(dy, dz)) as f32
 }
 
 #[allow(clippy::cast_precision_loss)]
 #[allow(clippy::cast_possible_truncation)]
 fn distance3d_chebyshev(start: Point3, end: Point3) -> f32 {
-    i32::max(
-        (start.x - end.x).abs(),
-        i32::max((start.y - end.y).abs(), (start.z - end.z).abs()),
-    ) as f32
+    let dx = start.x.abs_diff(end.x);
+    let dy = start.y.abs_diff(end.y);
+    let dz = start.z.abs_diff(end.z);
+    u32::max(dx, u32::max(dy, dz)) as f32
 }
 
 #[cfg(test)]
