@@ -2,7 +2,7 @@ use bracket_random::prelude::*;
 
 fn main() {
     let mut rng = RandomNumberGenerator::new();
-    let mut rolls: Vec<i32> = vec![0; 18];
+    let mut rolls: Vec<i32> = vec![0; 19];
 
     const N_ROLLS: i32 = 200000;
 
