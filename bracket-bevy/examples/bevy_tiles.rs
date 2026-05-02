@@ -23,29 +23,29 @@ pub fn xy_idx(x: i32, y: i32) -> usize {
 }
 
 pub fn idx_xy(idx: usize) -> (i32, i32) {
-    (idx as i32 % WIDTH as i32, idx as i32 / WIDTH as i32)
+    (idx as i32 % WIDTH, idx as i32 / WIDTH)
 }
 
 pub fn setup(mut commands: Commands, rng: Res<RandomNumbers>) {
     let mut state = State {
         map: vec![TileType::Floor; (WIDTH * HEIGHT) as usize],
-        player_position: xy_idx(WIDTH as i32 / 2, HEIGHT as i32 / 2),
+        player_position: xy_idx(WIDTH / 2, HEIGHT / 2),
         visible: vec![false; (WIDTH * HEIGHT) as usize],
     };
 
-    for x in 0..WIDTH as i32 {
+    for x in 0..WIDTH {
         state.map[xy_idx(x, 0)] = TileType::Wall;
-        state.map[xy_idx(x, HEIGHT as i32 - 1)] = TileType::Wall;
+        state.map[xy_idx(x, HEIGHT - 1)] = TileType::Wall;
     }
-    for y in 0..HEIGHT as i32 {
+    for y in 0..HEIGHT {
         state.map[xy_idx(0, y)] = TileType::Wall;
-        state.map[xy_idx(WIDTH as i32 - 1, y)] = TileType::Wall;
+        state.map[xy_idx(WIDTH - 1, y)] = TileType::Wall;
     }
 
     for _ in 0..400 {
         let x = rng.range(1, WIDTH - 1);
         let y = rng.range(1, HEIGHT - 1);
-        let idx = xy_idx(x as i32, y as i32);
+        let idx = xy_idx(x, y);
         if state.player_position != idx {
             state.map[idx] = TileType::Wall;
         }
@@ -67,7 +67,7 @@ impl State {
 
 impl BaseMap for State {
     fn is_opaque(&self, idx: usize) -> bool {
-        self.map[idx as usize] == TileType::Wall
+        self.map[idx] == TileType::Wall
     }
 }
 
@@ -158,22 +158,15 @@ fn tick(ctx: Res<BracketContext>, mut state: ResMut<State>, keyboard: Res<Input<
     for (i, tile) in state.map.iter().enumerate() {
         // Render a tile depending upon the tile type; now we check visibility as well!
         let mut fg = RGB::from_f32(1.0, 1.0, 1.0);
-        let glyph;
-
-        match tile {
-            TileType::Floor => {
-                glyph = 0;
-            }
-            TileType::Wall => {
-                glyph = 1;
-            }
-        }
+        let glyph = match tile {
+            TileType::Floor => 0,
+            TileType::Wall => 1,
+        };
         if !state.visible[i] {
             fg = fg * 0.3;
         } else {
             let distance = 1.0
-                - (DistanceAlg::Pythagoras.distance2d(Point::new(x, y), player_position) as f32
-                    / 10.0);
+                - (DistanceAlg::Pythagoras.distance2d(Point::new(x, y), player_position) / 10.0);
             fg = RGB::from_f32(distance, distance, distance);
         }
         draw_batch.set(

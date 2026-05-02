@@ -12,8 +12,21 @@ keywords = ["roguelike", "gamedev", "RGB", "HSV", "color"]
 categories = ["game-engines", "graphics"]
 license = "MIT"
 
+[features]
+parsing = ["bracket-random/parsing"]
+
 [dependencies]
-bevy = "0.9"
+bevy = { version = "0.9", default-features = false, features = [
+    "animation",
+    "bevy_asset",
+    "bevy_scene",
+    "bevy_winit",
+    "filesystem_watcher",
+    "hdr",
+    "png",
+    "render",
+    "x11",
+] }
 parking_lot = "0.12"
 lazy_static = "1.4"
 bracket-random = { path = "../bracket-random" }

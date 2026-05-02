@@ -64,14 +64,14 @@ fn tick(ctx: Res<BracketContext>, mut state: ResMut<State>) {
     ctx.printer(
         58,
         1,
-        &format!("#[pink]FPS: #[]{}", ctx.fps as u32),
+        format!("#[pink]FPS: #[]{}", ctx.fps as u32),
         TextAlign::Right,
         None,
     );
     ctx.printer(
         58,
         2,
-        &format!("#[pink]Frame Time: #[]{} ms", ctx.frame_time_ms),
+        format!("#[pink]Frame Time: #[]{} ms", ctx.frame_time_ms),
         TextAlign::Right,
         None,
     );

@@ -14,6 +14,9 @@ pub struct VectorLine {
 
 impl VectorLine {
     /// Define a vector line between two points.
+    #[must_use]
+    #[allow(clippy::cast_precision_loss)]
+    #[allow(clippy::cast_possible_truncation)]
     pub fn new(start: Point, end: Point) -> Self {
         let current_pos = Vec2::new(start.x as f32 + 0.5, start.y as f32 + 0.5);
         let destination = Vec2::new(end.x as f32 + 0.5, end.y as f32 + 0.5);
@@ -32,16 +35,18 @@ impl VectorLine {
 impl Iterator for VectorLine {
     type Item = Point;
 
+    #[allow(clippy::cast_precision_loss)]
+    #[allow(clippy::cast_possible_truncation)]
     fn next(&mut self) -> Option<Self::Item> {
         if self.finished {
-            if !self.really_finished {
+            if self.really_finished {
+                None
+            } else {
                 self.really_finished = true;
                 Some(Point::new(
                     self.current_pos.x as i32,
                     self.current_pos.y as i32,
                 ))
-            } else {
-                None
             }
         } else {
             let current_point = Point::new(self.current_pos.x as i32, self.current_pos.y as i32);

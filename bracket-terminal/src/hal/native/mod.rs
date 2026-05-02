@@ -2,9 +2,9 @@ mod init;
 pub mod shader_strings;
 use glow::NativeVertexArray;
 pub use init::*;
-mod mainloop;
 #[path = "../dummy/keycodes.rs"]
 mod keycodes;
+mod mainloop;
 use crate::hal::scaler::{default_gutter_size, ScreenScaler};
 use crate::hal::ConsoleBacking;
 pub use keycodes::VirtualKeyCode;

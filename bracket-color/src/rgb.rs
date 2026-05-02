@@ -30,7 +30,6 @@ pub enum HtmlColorConversionError {
 /// Support adding a float to a color. The result is clamped via the constructor.
 impl ops::Add<f32> for RGB {
     type Output = Self;
-    #[must_use]
     fn add(mut self, rhs: f32) -> Self {
         self.r += rhs;
         self.g += rhs;
@@ -42,7 +41,6 @@ impl ops::Add<f32> for RGB {
 /// Support adding an RGB to a color. The result is clamped via the constructor.
 impl ops::Add<RGB> for RGB {
     type Output = Self;
-    #[must_use]
     fn add(mut self, rhs: Self) -> Self {
         self.r += rhs.r;
         self.g += rhs.g;
@@ -54,7 +52,6 @@ impl ops::Add<RGB> for RGB {
 /// Support subtracting a float from a color. The result is clamped via the constructor.
 impl ops::Sub<f32> for RGB {
     type Output = Self;
-    #[must_use]
     fn sub(mut self, rhs: f32) -> Self {
         self.r -= rhs;
         self.g -= rhs;
@@ -66,7 +63,6 @@ impl ops::Sub<f32> for RGB {
 /// Support subtracting an RGB from a color. The result is clamped via the constructor.
 impl ops::Sub<RGB> for RGB {
     type Output = Self;
-    #[must_use]
     fn sub(mut self, rhs: Self) -> Self {
         self.r -= rhs.r;
         self.g -= rhs.g;
@@ -78,7 +74,6 @@ impl ops::Sub<RGB> for RGB {
 /// Support multiplying a color by a float. The result is clamped via the constructor.
 impl ops::Mul<f32> for RGB {
     type Output = Self;
-    #[must_use]
     fn mul(mut self, rhs: f32) -> Self {
         self.r *= rhs;
         self.g *= rhs;
@@ -90,7 +85,6 @@ impl ops::Mul<f32> for RGB {
 /// Support multiplying a color by another color. The result is clamped via the constructor.
 impl ops::Mul<RGB> for RGB {
     type Output = Self;
-    #[must_use]
     fn mul(mut self, rhs: Self) -> Self {
         self.r *= rhs.r;
         self.g *= rhs.g;
@@ -124,14 +118,15 @@ impl From<RGBA> for RGB {
 #[cfg(feature = "bevy")]
 impl From<bevy::prelude::Color> for RGB {
     fn from(item: bevy::prelude::Color) -> Self {
-        Self::from_f32(item.r(), item.g(), item.b())
+        let rgba = item.as_rgba();
+        Self::from_f32(rgba.r(), rgba.g(), rgba.b())
     }
 }
 
 #[cfg(feature = "bevy")]
 impl From<RGB> for bevy::prelude::Color {
     fn from(item: RGB) -> Self {
-        Self::from([item.r, item.g, item.b])
+        Self::rgb(item.r, item.g, item.b)
     }
 }
 
@@ -147,15 +142,15 @@ impl RGB {
     }
 
     /// Constructs a new RGB color, from 3 32-bit floats in the range 0..1
-    /// 
+    ///
     /// # Arguments
-    /// 
+    ///
     /// * `r` - the red component (0..1)
     /// * `g` - the green component (0..1)
     /// * `b` - the blue component (0..1)
-    /// 
+    ///
     /// # Example
-    /// 
+    ///
     /// ```rust
     /// use bracket_color::prelude::*;
     /// let red = RGB::from_f32(1.0, 0.0, 0.0);
@@ -164,9 +159,9 @@ impl RGB {
     #[inline]
     #[must_use]
     pub fn from_f32(r: f32, g: f32, b: f32) -> Self {
-        let r_clamped = f32::min(1.0, f32::max(0.0, r));
-        let g_clamped = f32::min(1.0, f32::max(0.0, g));
-        let b_clamped = f32::min(1.0, f32::max(0.0, b));
+        let r_clamped = r.clamp(0.0, 1.0);
+        let g_clamped = g.clamp(0.0, 1.0);
+        let b_clamped = b.clamp(0.0, 1.0);
         Self {
             r: r_clamped,
             g: g_clamped,
@@ -175,15 +170,15 @@ impl RGB {
     }
 
     /// Constructs a new RGB color, from 3 bytes in the range 0..255
-    /// 
+    ///
     /// # Arguments
-    /// 
+    ///
     /// * `r` - the red component, ranged from 0 to 255
     /// * `g` - the green component, ranged from 0 to 255
     /// * `b` - the blue component, ranged from 0 to 255
-    /// 
+    ///
     /// # Example
-    /// 
+    ///
     /// ```rust
     /// use bracket_color::prelude::*;
     /// let red = RGB::from_u8(255, 0, 0);
@@ -200,13 +195,13 @@ impl RGB {
     }
 
     /// Construct an RGB color from a tuple of u8, or a named constant
-    /// 
+    ///
     /// # Arguments
-    /// 
+    ///
     /// * `col` a tuple of three `u8` values. See `from_u8`. These are usually provided from the `named` colors list.
-    /// 
+    ///
     /// # Example
-    /// 
+    ///
     /// ```rust
     /// use bracket_color::prelude::*;
     /// let red = RGB::named(RED);
@@ -219,13 +214,13 @@ impl RGB {
     }
 
     /// Constructs from an HTML color code (e.g. "#eeffee")
-    /// 
+    ///
     /// # Arguments
-    /// 
+    ///
     /// * `code` - an HTML color notation (e.g. "#ffeeff")
-    /// 
+    ///
     /// # Example
-    /// 
+    ///
     /// ```rust
     /// use bracket_color::prelude::*;
     /// let red = RGB::from_hex("#FF0000");
@@ -233,7 +228,7 @@ impl RGB {
     /// ```
     ///
     /// # Errors
-    /// 
+    ///
     /// See `HtmlColorConversionError`
     #[allow(clippy::cast_precision_loss)]
     pub fn from_hex<S: AsRef<str>>(code: S) -> Result<Self, HtmlColorConversionError> {
@@ -320,18 +315,18 @@ impl RGB {
         let d = max - min;
         let s = if max == 0.0 { 0.0 } else { d / max };
 
-        if (max - min).abs() < std::f32::EPSILON {
+        if (max - min).abs() < f32::EPSILON {
             h = 0.0; // Achromatic
         } else {
-            if (max - r).abs() < std::f32::EPSILON {
+            if (max - r).abs() < f32::EPSILON {
                 if g < b {
                     h = (g - b) / d + 6.0;
                 } else {
                     h = (g - b) / d;
                 }
-            } else if (max - g).abs() < std::f32::EPSILON {
+            } else if (max - g).abs() < f32::EPSILON {
                 h = (b - r) / d + 2.0;
-            } else if (max - b).abs() < std::f32::EPSILON {
+            } else if (max - b).abs() < f32::EPSILON {
                 h = (r - g) / d + 4.0;
             }
 
@@ -461,9 +456,9 @@ mod tests {
     // Tests that we make an RGB triplet at defaults and it is black.
     fn make_rgb_minimal() {
         let black = RGB::new();
-        assert!(black.r < std::f32::EPSILON);
-        assert!(black.g < std::f32::EPSILON);
-        assert!(black.b < std::f32::EPSILON);
+        assert!(black.r < f32::EPSILON);
+        assert!(black.g < f32::EPSILON);
+        assert!(black.b < f32::EPSILON);
     }
 
     #[test]
@@ -471,45 +466,45 @@ mod tests {
     fn convert_olive_to_rgb() {
         let grey = HSV::from_f32(60.0 / 360.0, 1.0, 0.501_960_8);
         let rgb = grey.to_rgb();
-        assert!(f32::abs(rgb.r - 128.0 / 255.0) < std::f32::EPSILON);
-        assert!(f32::abs(rgb.g - 128.0 / 255.0) < std::f32::EPSILON);
-        assert!(rgb.b < std::f32::EPSILON);
+        assert!(f32::abs(rgb.r - 128.0 / 255.0) < f32::EPSILON);
+        assert!(f32::abs(rgb.g - 128.0 / 255.0) < f32::EPSILON);
+        assert!(rgb.b < f32::EPSILON);
     }
 
     #[test]
     // Tests that we make an HSV triplet at defaults and it is black.
     fn test_red_hex() {
         let rgb = RGB::from_hex("#FF0000").expect("Invalid hex string");
-        assert!(f32::abs(rgb.r - 1.0) < std::f32::EPSILON);
-        assert!(rgb.g < std::f32::EPSILON);
-        assert!(rgb.b < std::f32::EPSILON);
+        assert!(f32::abs(rgb.r - 1.0) < f32::EPSILON);
+        assert!(rgb.g < f32::EPSILON);
+        assert!(rgb.b < f32::EPSILON);
     }
 
     #[test]
     // Tests that we make an HSV triplet at defaults and it is black.
     fn test_green_hex() {
         let rgb = RGB::from_hex("#00FF00").expect("Invalid hex string");
-        assert!(rgb.r < std::f32::EPSILON);
-        assert!(f32::abs(rgb.g - 1.0) < std::f32::EPSILON);
-        assert!(rgb.b < std::f32::EPSILON);
+        assert!(rgb.r < f32::EPSILON);
+        assert!(f32::abs(rgb.g - 1.0) < f32::EPSILON);
+        assert!(rgb.b < f32::EPSILON);
     }
 
     #[test]
     // Tests that we make an HSV triplet at defaults and it is black.
     fn test_blue_hex() {
         let rgb = RGB::from_hex("#0000FF").expect("Invalid hex string");
-        assert!(rgb.r < std::f32::EPSILON);
-        assert!(rgb.g < std::f32::EPSILON);
-        assert!(f32::abs(rgb.b - 1.0) < std::f32::EPSILON);
+        assert!(rgb.r < f32::EPSILON);
+        assert!(rgb.g < f32::EPSILON);
+        assert!(f32::abs(rgb.b - 1.0) < f32::EPSILON);
     }
 
     #[test]
     // Tests that we make an HSV triplet at defaults and it is black.
     fn test_blue_named() {
         let rgb = RGB::named(BLUE);
-        assert!(rgb.r < std::f32::EPSILON);
-        assert!(rgb.g < std::f32::EPSILON);
-        assert!(f32::abs(rgb.b - 1.0) < std::f32::EPSILON);
+        assert!(rgb.r < f32::EPSILON);
+        assert!(rgb.g < f32::EPSILON);
+        assert!(f32::abs(rgb.b - 1.0) < f32::EPSILON);
     }
 
     #[test]

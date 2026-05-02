@@ -21,5 +21,5 @@ fn tick(ctx: Res<BracketContext>) {
         3,
         format!("Console is currently {width}x{height} characters."),
     );
-    ctx.draw_hollow_box_double(0, 0, width as i32 - 1, height as i32 - 1, WHITE, NAVY);
+    ctx.draw_hollow_box_double(0, 0, width - 1, height - 1, WHITE, NAVY);
 }

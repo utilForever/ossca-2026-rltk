@@ -61,7 +61,7 @@ mod tests {
 
     #[test]
     // Tests that we make an RGB triplet at defaults and it is black.
-    #[should_panic]
+    #[should_panic(expected = "You must either define the dimensions function")]
     fn test_unimplemented_dimensions() {
         struct TestMap {}
         impl BaseMap for TestMap {}

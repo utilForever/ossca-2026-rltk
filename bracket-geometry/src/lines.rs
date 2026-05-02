@@ -1,6 +1,7 @@
 use crate::prelude::{Bresenham, DistanceAlg, Point};
 
 /// Enumeration of available 2D Distance algorithms
+#[derive(Clone, Copy)]
 pub enum LineAlg {
     /// Use Bresenham's rasterization algorithm for line definition
     Bresenham,
@@ -9,6 +10,7 @@ pub enum LineAlg {
 }
 
 /// Plots a line between two 2D points and returns a vector of points along the line.
+#[must_use]
 pub fn line2d(algorithm: LineAlg, start: Point, end: Point) -> Vec<Point> {
     match algorithm {
         LineAlg::Bresenham => line2d_bresenham(start, end),
@@ -18,6 +20,7 @@ pub fn line2d(algorithm: LineAlg, start: Point, end: Point) -> Vec<Point> {
 
 /// Uses a Bresenham's algorithm to plot a line between two points. On some CPUs, this is faster
 /// than Bresenham.
+#[must_use]
 pub fn line2d_bresenham(start: Point, end: Point) -> Vec<Point> {
     let line = Bresenham::new(start, end);
     line.chain(std::iter::once(end)).collect()
@@ -25,6 +28,9 @@ pub fn line2d_bresenham(start: Point, end: Point) -> Vec<Point> {
 
 /// Uses a 2D vector algorithm to plot a line between two points. On some CPUs, this is faster
 /// than Bresenham.
+#[must_use]
+#[allow(clippy::cast_precision_loss)]
+#[allow(clippy::cast_possible_truncation)]
 pub fn line2d_vector(start: Point, end: Point) -> Vec<Point> {
     use ultraviolet::Vec2;
 
@@ -36,7 +42,7 @@ pub fn line2d_vector(start: Point, end: Point) -> Vec<Point> {
     let dest = Vec2::new(end.x as f32, end.y as f32);
     let n_steps = DistanceAlg::Pythagoras.distance2d(start, end);
     let slope = (dest - pos).normalized();
-    let mut result: Vec<Point> = Vec::with_capacity(n_steps as usize + 1);
+    let mut result: Vec<Point> = Vec::new();
     let mut count = 0;
     result.push(start);
     loop {

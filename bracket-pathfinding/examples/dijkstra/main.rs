@@ -7,9 +7,10 @@ fn main() {
     let map = Map::new();
 
     // Perform the search
-    let mut search_targets: Vec<usize> = Vec::new();
-    search_targets.push(map.point2d_to_index(START_POINT));
-    search_targets.push(map.point2d_to_index(END_POINT));
+    let search_targets: Vec<usize> = vec![
+        map.point2d_to_index(START_POINT),
+        map.point2d_to_index(END_POINT),
+    ];
     let flow_map = DijkstraMap::new(MAP_WIDTH, MAP_HEIGHT, &search_targets, &map, 1024.0);
 
     // Draw the result
@@ -22,7 +23,7 @@ fn main() {
             let color = match tile {
                 '#' => RGB::named(YELLOW),
                 _ => {
-                    if flow_map.map[idx] < std::f32::MAX {
+                    if flow_map.map[idx] < f32::MAX {
                         RGB::from_u8(
                             0,
                             255 - {

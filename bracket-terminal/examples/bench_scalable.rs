@@ -51,7 +51,7 @@ impl GameState for State {
             RGB::from_u8(255, 255, 255),
             RGB::from_u8(0, 0, 0),
         );
-        ctx.print(35, 22, &format!("{} fps", ctx.fps as u32));
+        ctx.print(35, 22, format!("{} fps", ctx.fps as u32));
     }
 }
 

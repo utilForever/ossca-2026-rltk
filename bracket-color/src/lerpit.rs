@@ -17,21 +17,25 @@ pub struct RgbLerp {
 impl RgbLerp {
     /// Creates a new RGB lerp iterator. The iterator smoothly transitions between two colors,
     /// using the specified number of steps.
-    /// 
+    ///
     /// # Arguments
-    /// 
+    ///
     /// * `start` - the color to start from.
     /// * `end` - the color to end at on the final step.
     /// * `steps` - number of steps to iterate between the start and end colors.
-    /// 
+    ///
     /// # Example
-    /// 
+    ///
     /// ```rust
     /// use bracket_color::prelude::*;
     /// for color in RgbLerp::new(RGB::named(RED), RGB::named(YELLOW), 20) {
     ///     println!("{:?}", color); // In-between color
     /// }
     /// ```
+    ///
+    /// # Panics
+    ///
+    /// This can panic if `steps` is not convertible to a `usize`.
     #[inline]
     pub fn new<T>(start: RGB, end: RGB, steps: T) -> Self
     where
@@ -70,7 +74,6 @@ impl Iterator for RgbLerp {
 impl ExactSizeIterator for RgbLerp {
     /// Returns the `n_steps` component of the iterator
     #[inline]
-    #[must_use]
     fn len(&self) -> usize {
         self.n_steps
     }
@@ -90,6 +93,10 @@ pub struct HsvLerp {
 
 impl HsvLerp {
     /// Creates a new `HsvLerp` iterator.
+    ///
+    /// # Panics
+    ///
+    /// This can panic if `steps` is not convertible to a `usize`.
     #[inline]
     pub fn new<T>(start: HSV, end: HSV, steps: T) -> Self
     where
@@ -124,7 +131,6 @@ impl Iterator for HsvLerp {
 
 impl ExactSizeIterator for HsvLerp {
     #[inline]
-    #[must_use]
     fn len(&self) -> usize {
         self.n_steps
     }
@@ -144,6 +150,10 @@ pub struct RgbaLerp {
 
 impl RgbaLerp {
     /// Creates a new RGB iterator
+    ///
+    /// # Panics
+    ///
+    /// This can panic if `steps` is not convertible to a `usize`.
     #[inline]
     pub fn new<T>(start: RGBA, end: RGBA, steps: T) -> Self
     where
@@ -193,6 +203,10 @@ pub struct AlphaLerp {
 
 impl AlphaLerp {
     /// Creates a new RGB iterator
+    ///
+    /// # Panics
+    ///
+    /// This can panic if `steps` is not convertible to a `usize`.
     #[inline]
     pub fn new<T>(start: RGBA, end: RGBA, steps: T) -> Self
     where
