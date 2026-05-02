@@ -19,7 +19,17 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v6
       - name: Install Linux system dependencies
-        run: sudo apt-get update && sudo apt-get install -y pkg-config libasound2-dev libudev-dev
+        run: |
+          for attempt in 1 2 3; do
+            sudo apt-get update -o Acquire::Retries=3 && \
+            sudo apt-get install -y -o Acquire::Retries=3 pkg-config libasound2-dev libudev-dev && break
+            if [ "$attempt" -eq 3 ]; then
+              echo "Failed to install system dependencies after ${attempt} attempts." >&2
+              exit 1
+            fi
+            echo "Retrying apt dependency installation..."
+            sleep 15
+          done
       - name: Install stable toolchain
         uses: dtolnay/rust-toolchain@stable
       - name: Cache cargo dependencies
@@ -34,7 +44,17 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v6
       - name: Install Linux system dependencies
-        run: sudo apt-get update && sudo apt-get install -y pkg-config libasound2-dev libudev-dev
+        run: |
+          for attempt in 1 2 3; do
+            sudo apt-get update -o Acquire::Retries=3 && \
+            sudo apt-get install -y -o Acquire::Retries=3 pkg-config libasound2-dev libudev-dev && break
+            if [ "$attempt" -eq 3 ]; then
+              echo "Failed to install system dependencies after ${attempt} attempts." >&2
+              exit 1
+            fi
+            echo "Retrying apt dependency installation..."
+            sleep 15
+          done
       - name: Install stable toolchain
         uses: dtolnay/rust-toolchain@stable
       - name: Cache cargo dependencies
@@ -51,7 +71,17 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v6
       - name: Install Linux system dependencies
-        run: sudo apt-get update && sudo apt-get install -y pkg-config libasound2-dev libudev-dev
+        run: |
+          for attempt in 1 2 3; do
+            sudo apt-get update -o Acquire::Retries=3 && \
+            sudo apt-get install -y -o Acquire::Retries=3 pkg-config libasound2-dev libudev-dev && break
+            if [ "$attempt" -eq 3 ]; then
+              echo "Failed to install system dependencies after ${attempt} attempts." >&2
+              exit 1
+            fi
+            echo "Retrying apt dependency installation..."
+            sleep 15
+          done
       - name: Install stable toolchain
         uses: dtolnay/rust-toolchain@stable
       - name: Cache cargo dependencies
