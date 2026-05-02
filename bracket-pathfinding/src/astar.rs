@@ -235,7 +235,7 @@ mod test {
                 exits.push((self.len - 1, self.len as f32))
             }
             // step to next node
-            if idx <= self.len - 1 {
+            if idx + 1 < self.len {
                 exits.push((idx + 1, 1.0));
             }
 
