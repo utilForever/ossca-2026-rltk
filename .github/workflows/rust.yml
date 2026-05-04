@@ -13,8 +13,11 @@ permissions:
 
 jobs:
   check:
-    name: ✅ Check
-    runs-on: ubuntu-latest
+    name: ✅ Check (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
     steps:
       - name: Checkout sources
         uses: actions/checkout@v6
