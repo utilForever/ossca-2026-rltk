@@ -3,4 +3,5 @@
 
 ## Documentation
 
+- [AGENTS.md](./AGENTS.md): Repository-specific guide for AI coding agents
 - [ARCHITECTURE.md](./ARCHITECTURE.md): Project architecture and crate-level design overview
