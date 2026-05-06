@@ -25,7 +25,7 @@ object-pool = "0.5.3"
 glow = { version = "~0.11", optional = true }
 image = { version = "0.24", default-features = false, features = ["jpeg", "png"], optional = true }
 png = { version = "0.17", optional = true }
-crossterm = { version = "~0.25", optional = true }
+crossterm = { version = "~0.29", optional = true }
 pancurses = { version = "0.17", optional = true }
 ultraviolet = "~0.9"
 parking_lot = { version = "~0.12" }
