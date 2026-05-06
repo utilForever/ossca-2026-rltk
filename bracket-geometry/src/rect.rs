@@ -152,6 +152,13 @@ mod tests {
     use crate::prelude::{Point, Rect};
 
     #[test]
+    fn test_default_is_zero() {
+        let default_rect = Rect::default();
+        let zero_rect = Rect::zero();
+        assert_eq!(default_rect, zero_rect);
+    }
+
+    #[test]
     fn test_dimensions() {
         let rect = Rect::with_size(0, 0, 10, 10);
         assert!(rect.width() == 10);
@@ -167,24 +174,55 @@ mod tests {
 
     #[test]
     fn test_intersect() {
+        // case 1: r2 is strictly inside r1
         let r1 = Rect::with_size(0, 0, 10, 10);
-        let r2 = Rect::with_size(5, 5, 10, 10);
-        let r3 = Rect::with_size(100, 100, 5, 5);
+        let r2 = Rect::with_size(2, 2, 5, 5);
         assert!(r1.intersect(&r2));
-        assert!(!r1.intersect(&r3));
+
+        // case 2: r1 and r2 partially overlap
+        let r2 = Rect::with_size(5, 5, 10, 10);
+        assert!(r1.intersect(&r2));
+
+        // case 3: r1 and r2 are identical
+        let r2 = Rect::with_size(0, 0, 10, 10);
+        assert!(r1.intersect(&r2));
+
+        // case 4: r1 and r2 share an edge
+        let r2 = Rect::with_size(10, 0, 10, 10);
+        assert!(r1.intersect(&r2));
+
+        // case 5: r1 and r2 share a vertex
+        let r2 = Rect::with_size(10, 10, 10, 10);
+        assert!(r1.intersect(&r2));
+
+        // case 6: r1 and r2 do not overlap at all
+        let r2 = Rect::with_size(100, 100, 5, 5);
+        assert!(!r1.intersect(&r2));
     }
 
     #[test]
     fn test_center() {
         let r1 = Rect::with_size(0, 0, 10, 10);
-        let center = r1.center();
-        assert!(center.x == 5 && center.y == 5);
+        assert_eq!(r1.center(), Point::new(5, 5));
+
+        let r2 = Rect::with_size(0, 0, 11, 11);
+        assert_eq!(r2.center(), Point::new(5, 5));
+
+        let r3 = Rect::with_size(-4, -5, 10, 14);
+        assert_eq!(r3.center(), Point::new(1, 2));
     }
 
     #[test]
     fn test_point_in_rect() {
         let r1 = Rect::with_size(0, 0, 10, 10);
+        // case 1: point is strictly inside the rectangle
         assert!(r1.point_in_rect(Point::new(5, 5)));
+        // case 2: point is on the edge
+        assert!(r1.point_in_rect(Point::new(0, 5)));
+        // case 3: point is in the rect only if x < x2 and y < y2
+        assert!(!r1.point_in_rect(Point::new(10, 5)));
+        assert!(!r1.point_in_rect(Point::new(5, 10)));
+        // case 4: point is outside the rectangle
         assert!(!r1.point_in_rect(Point::new(100, 100)));
     }
 
@@ -200,16 +238,23 @@ mod tests {
 
     #[test]
     fn test_rect_callback() {
-        use std::collections::HashSet;
+        use std::vec::Vec;
 
-        let r1 = Rect::with_size(0, 0, 1, 1);
-        let mut points: HashSet<Point> = HashSet::new();
+        // test for_each's sequential callback by pushing points into a vector
+        let r1 = Rect::with_size(0, 0, 2, 2);
+        let mut points = Vec::new();
         r1.for_each(|p| {
-            points.insert(p);
+            points.push(p);
         });
-        assert!(points.contains(&Point::new(0, 0)));
-        assert!(!points.contains(&Point::new(1, 0)));
-        assert!(!points.contains(&Point::new(0, 1)));
-        assert!(!points.contains(&Point::new(1, 1)));
+
+        assert_eq!(
+            points,
+            vec![
+                Point::new(0, 0),
+                Point::new(1, 0),
+                Point::new(0, 1),
+                Point::new(1, 1),
+            ]
+        );
     }
 }
