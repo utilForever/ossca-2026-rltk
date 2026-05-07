@@ -36,7 +36,7 @@ pub fn main_loop<GS: GameState>(mut bterm: BTerm, mut gamestate: GS) -> BResult<
         }
     }
 
-    let now = wasm_timer::Instant::now();
+    let now = web_time::Instant::now();
     let mut prev_seconds = now.elapsed().as_secs();
     let mut prev_ms = now.elapsed().as_millis();
     let mut frames = 0;
@@ -86,7 +86,7 @@ fn tock<GS: GameState>(
     frames: &mut i32,
     prev_seconds: &mut u64,
     prev_ms: &mut u128,
-    now: &wasm_timer::Instant,
+    now: &web_time::Instant,
 ) {
     // Check that the console backings match our actual consoles
     check_console_backing();

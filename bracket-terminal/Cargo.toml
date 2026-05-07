@@ -59,10 +59,10 @@ web-sys = { version = "0.3", features=["console", "Attr", "CanvasRenderingContex
     "EventTarget", "HtmlCanvasElement", "HtmlElement", "HtmlInputElement", "Node", "Text", "Window", "KeyboardEvent",
     "MouseEvent"] }
 wasm-bindgen = "0.2"
-wasm-timer = "0.1.0"
 rand = { version = "0.8", default-features = false }
 console_error_panic_hook = "0.1.6"
 winit = { version = "0.30" }
+web-time = "1.1.0"
 
 [[bench]]
 name = "batching_benchmark"
