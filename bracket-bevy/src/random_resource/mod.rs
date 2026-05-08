@@ -23,8 +23,7 @@ impl RandomNumbers {
     /// Returns a random value of whatever type you specify
     pub fn rand<T>(&self) -> T
     where
-        bracket_random::rand::distributions::Standard:
-            bracket_random::rand::distributions::Distribution<T>,
+        bracket_random::rand::distr::StandardUniform: bracket_random::rand::distr::Distribution<T>,
     {
         self.rng.lock().rand::<T>()
     }
@@ -34,7 +33,7 @@ impl RandomNumbers {
     /// So range(1,6) will give you numbers from 1 to 5.
     pub fn range<T>(&self, min: T, max: T) -> T
     where
-        T: bracket_random::rand::distributions::uniform::SampleUniform + PartialOrd,
+        T: bracket_random::rand::distr::uniform::SampleUniform + PartialOrd,
     {
         self.rng.lock().range(min, max)
     }
