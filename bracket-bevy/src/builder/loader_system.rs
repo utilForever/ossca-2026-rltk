@@ -3,10 +3,10 @@ use crate::{
     TerminalLayer,
 };
 use bevy::{
+    asset::UntypedHandle,
     prelude::{
-        AssetServer, Assets, Camera2dBundle, Commands, Component, HandleUntyped, Mesh, Res, ResMut,
+        AssetServer, Assets, Camera2d, ColorMaterial, Commands, Component, Mesh, Res, ResMut,
     },
-    sprite::ColorMaterial,
 };
 
 use super::image_fixer::ImagesToLoad;
@@ -22,9 +22,7 @@ pub(crate) fn load_terminals(
     mut meshes: ResMut<Assets<Mesh>>,
 ) {
     if context.with_ortho_camera {
-        commands
-            .spawn(Camera2dBundle::default())
-            .insert(BracketCamera);
+        commands.spawn((Camera2d, BracketCamera));
     }
 
     // Setup the new context
@@ -32,11 +30,11 @@ pub(crate) fn load_terminals(
     new_context.scaling_mode = context.scaling_mode;
 
     // Load the fonts
-    let mut texture_handles = Vec::<HandleUntyped>::new();
+    let mut texture_handles = Vec::<UntypedHandle>::new();
     for font in context.fonts.iter() {
         let texture_handle = asset_server.load(&font.filename);
         let material_handle = materials.add(ColorMaterial::from(texture_handle.clone()));
-        texture_handles.push(texture_handle.clone_untyped());
+        texture_handles.push(texture_handle.clone().untyped());
         new_context.fonts.push(FontStore::new(
             texture_handle,
             material_handle,

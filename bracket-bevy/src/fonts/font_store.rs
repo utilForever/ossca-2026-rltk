@@ -1,7 +1,4 @@
-use bevy::{
-    prelude::{Handle, Image},
-    sprite::ColorMaterial,
-};
+use bevy::prelude::{ColorMaterial, Handle, Image};
 
 /// Stores handles to the components of a font, along with its glyph settings.
 pub(crate) struct FontStore {
