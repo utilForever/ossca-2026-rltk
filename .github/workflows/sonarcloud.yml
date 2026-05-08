@@ -43,4 +43,4 @@ jobs:
         run: echo "SONAR_TOKEN is not configured. Skipping SonarCloud scan."
       - name: Run SonarCloud scan
         if: ${{ env.SONAR_TOKEN != '' }}
-        uses: SonarSource/sonarqube-scan-action@v6
+        uses: SonarSource/sonarqube-scan-action@v8
