@@ -20,3 +20,4 @@ ultraviolet = "~0.9.0"
 
 [dev-dependencies]
 crossterm = "~0.25"
+rstest = "0.26.1"

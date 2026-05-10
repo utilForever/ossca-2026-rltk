@@ -1,6 +1,6 @@
 # bracket-geometry
 
-This crate provides geometry support for the overall `bracket-lib` system, and is useful stand-alone. It provides some geometric primitives (`Point`, `Point3D`, `Rect`), support functions and distance calculations. It also includes Bresenham's line algorithm, a vector line algorithm, and Bresenham's Circle algorithm.
+This crate provides geometry support for the overall `bracket-lib` system, and is useful stand-alone. It provides some geometric primitives (`Point`, `Point3D`, `Rect`), support functions and distance calculations. It also includes Bresenham's line algorithm, a vector line algorithm, Bresenham's Circle algorithm, and filled ellipse plotting.
 
 It uses UltraViolet for fast processing, and includes conversion functions to/from native UltraViolet types.
 
@@ -91,6 +91,20 @@ for point in BresenhamCircle::new(Point::new(10,10), 5) {
 }
 ```
 
+## Ellipse Plotting
+
+Ellipses are useful for roguelike area effects, such as poison clouds or
+spell ranges. For example:
+
+```rust
+use bracket_geometry::prelude::*;
+let cloud_center = Point::new(10, 10);
+let poison_cloud = ellipse2d(cloud_center, 4, 2);
+for point in poison_cloud {
+    println!("{:?}", point);
+}
+```
+
 ## Distance Heuristics
 
 There's a full set of distance algorithms available:
@@ -112,6 +126,7 @@ If you enable `serde`, it provides serialization/de-serialization via the `Serde
 The following examples are included; they use `crossterm` to print to your terminal. Run examples with `cargo run --example <name>`:
 
 * `bresenham_circle` - draws a circle.
+* `ellipse` - draws a filled ellipse.
 * `bresenham_line` - draws a line.
 * `vector_line` - draws a line, using an algorithm that doesn't smooth corners.
 * `distance` - calculates distance between two points with all supported algorithms and outputs it.

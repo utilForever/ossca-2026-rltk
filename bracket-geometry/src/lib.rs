@@ -4,7 +4,7 @@
 
 //! This crate is part of the `bracket-lib` family.
 //!
-//! It provides point (2D and 3D), rectangle, line and circle plotting functionality.
+//! It provides point (2D and 3D), rectangle, line, circle and ellipse plotting functionality.
 //! It uses `UltraViolet` behind the scenes for very fast calculations. If you enable the
 //! `serde` feature flag, it implements serialization/deserialization of the primitive types.
 //!
@@ -53,6 +53,15 @@
 //! }
 //! ```
 //!
+//! Ellipse example:
+//!
+//! ```rust
+//! use bracket_geometry::prelude::*;
+//! let cloud_center = Point::new(10, 10);
+//! let poison_cloud = ellipse2d(cloud_center, 4, 2);
+//! println!("{:?}", poison_cloud);
+//! ```
+//!
 //! Distance examples:
 //!
 //! ```rust
@@ -67,6 +76,7 @@ mod angle;
 mod angles;
 mod circle_bresenham;
 mod distance;
+mod ellipse;
 mod line_bresenham;
 mod line_vector;
 mod lines;
@@ -81,6 +91,7 @@ pub mod prelude {
     pub use crate::angles::*;
     pub use crate::circle_bresenham::*;
     pub use crate::distance::*;
+    pub use crate::ellipse::*;
     pub use crate::line_bresenham::*;
     pub use crate::line_vector::*;
     pub use crate::lines::*;
