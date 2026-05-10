@@ -73,7 +73,7 @@ flowchart LR
 | `bracket-pathfinding`      | A\*, Dijkstra, and FOV over user-provided map traits                                         | `bracket-algorithm-traits`, `bracket-geometry`                          |
 | `bracket-algorithm-traits` | Abstractions (`Algorithm2D/3D`, `BaseMap`) that decouple algorithms from storage layout      | `bracket-geometry`, `bracket-pathfinding`                               |
 | `bracket-noise`            | Noise generation utilities (FastNoise-style)                                                 | `bracket-random`                                                        |
-| `bracket-geometry`         | Points, rectangles, lines, circles, and distance helpers                                     | `bracket-algorithm-traits`, `bracket-pathfinding`, `bracket-terminal`   |
+| `bracket-geometry`         | Points, rectangles, lines, circles, ellipses, and distance helpers                           | `bracket-algorithm-traits`, `bracket-pathfinding`, `bracket-terminal`   |
 | `bracket-color`            | RGB/HSV types, palette support, and color transforms                                         | `bracket-terminal`, `bracket-rex`, `bracket-bevy`                       |
 | `bracket-random`           | RNG and optional dice-string parsing                                                         | `bracket-noise`, `bracket-bevy`                                         |
 | `bracket-rex`              | RexPaint import/export support                                                               | `bracket-color`, `bracket-embedding`, `bracket-terminal`                |

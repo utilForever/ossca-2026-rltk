@@ -13,7 +13,7 @@ fn main() {
     let player_position = Point::new(10, 5);
     let monster_position = Point::new(14, 6);
     let outside_monster_position = Point::new(18, 1);
-    let poison_cloud: HashSet<Point> = ellipse2d(cloud_center, 6, 3).into_iter().collect();
+    let poison_cloud: HashSet<Point> = ellipse(cloud_center, 6, 3).into_iter().collect();
 
     for point in &poison_cloud {
         draw_point(&mut fake_console, *point, '*');

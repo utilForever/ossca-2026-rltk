@@ -99,7 +99,7 @@ spell ranges. For example:
 ```rust
 use bracket_geometry::prelude::*;
 let cloud_center = Point::new(10, 10);
-let poison_cloud = ellipse2d(cloud_center, 4, 2);
+let poison_cloud = ellipse(cloud_center, 4, 2);
 for point in poison_cloud {
     println!("{:?}", point);
 }
