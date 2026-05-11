@@ -42,19 +42,13 @@ pub mod prelude {
     #[cfg(all(feature = "opengl", not(target_arch = "wasm32")))]
     pub use crate::hal::GlCallback;
 
-    #[cfg(all(feature = "webgpu", not(feature = "opengl")))]
-    pub use crate::hal::VirtualKeyCode;
-
-    #[cfg(target_arch = "wasm32")]
-    pub use crate::hal::VirtualKeyCode;
-
-    #[cfg(feature = "curses")]
-    pub use crate::hal::VirtualKeyCode;
-
-    #[cfg(feature = "crossterm")]
-    pub use crate::hal::VirtualKeyCode;
-
-    #[cfg(all(feature = "opengl", not(target_arch = "wasm32")))]
+    #[cfg(any(
+        all(feature = "opengl", not(target_arch = "wasm32")),
+        all(feature = "webgpu", not(feature = "opengl")),
+        target_arch = "wasm32",
+        feature = "curses",
+        feature = "crossterm",
+    ))]
     pub use crate::hal::VirtualKeyCode;
 }
 

@@ -1,7 +1,7 @@
 [package]
 name = "bracket-bevy"
 version = "0.9.0"
-edition = "2021"
+edition = "2024"
 authors = ["Herbert Wolverson <herberticus@gmail.com>"]
 publish = true
 description = "ASCII/CP437 Psuedo-terminal for Bevy, based on bracket-lib. Aims to provide everything you need to produce a retro console experience using Bevy for the ECS and rendering."

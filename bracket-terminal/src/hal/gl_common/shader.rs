@@ -60,7 +60,7 @@ impl Shader {
     /// activate the shader
     /// ------------------------------------------------------------------------
     pub unsafe fn useProgram(&self, gl: &glow::Context) {
-        gl.use_program(Some(self.ID));
+        unsafe { gl.use_program(Some(self.ID)) };
         gl_error(gl);
     }
 
@@ -69,56 +69,56 @@ impl Shader {
     /// utility uniform functions
     /// ------------------------------------------------------------------------
     pub unsafe fn setBool(&self, gl: &glow::Context, name: &str, value: bool) {
-        gl.uniform_1_i32(
+        unsafe { gl.uniform_1_i32(
             gl.get_uniform_location(self.ID, name).as_ref(),
             value as i32,
-        );
+        ) };
     }
 
     #[allow(non_snake_case)]
     #[allow(clippy::missing_safety_doc)]
     /// ------------------------------------------------------------------------
     pub unsafe fn setInt(&self, gl: &glow::Context, name: &str, value: i32) {
-        gl.uniform_1_i32(gl.get_uniform_location(self.ID, name).as_ref(), value);
+        unsafe { gl.uniform_1_i32(gl.get_uniform_location(self.ID, name).as_ref(), value) };
     }
 
     #[allow(non_snake_case)]
     #[allow(clippy::missing_safety_doc)]
     /// ------------------------------------------------------------------------
     pub unsafe fn setFloat(&self, gl: &glow::Context, name: &str, value: f32) {
-        gl.uniform_1_f32(gl.get_uniform_location(self.ID, name).as_ref(), value);
+        unsafe { gl.uniform_1_f32(gl.get_uniform_location(self.ID, name).as_ref(), value) };
     }
 
     #[allow(non_snake_case)]
     #[allow(clippy::missing_safety_doc)]
     /// ------------------------------------------------------------------------
     pub unsafe fn setVector3(&self, gl: &glow::Context, name: &str, value: &Vec3) {
-        gl.uniform_3_f32(
+        unsafe { gl.uniform_3_f32(
             gl.get_uniform_location(self.ID, name).as_ref(),
             value.x,
             value.y,
             value.z,
-        );
+        ) };
     }
 
     #[allow(non_snake_case)]
     #[allow(clippy::missing_safety_doc)]
     /// ------------------------------------------------------------------------
     pub unsafe fn setVec3(&self, gl: &glow::Context, name: &str, x: f32, y: f32, z: f32) {
-        gl.uniform_3_f32(gl.get_uniform_location(self.ID, name).as_ref(), x, y, z);
+        unsafe { gl.uniform_3_f32(gl.get_uniform_location(self.ID, name).as_ref(), x, y, z) };
     }
 
     #[allow(non_snake_case)]
     #[allow(clippy::missing_safety_doc)]
     /// ------------------------------------------------------------------------
     pub unsafe fn setVec2(&self, gl: &glow::Context, name: &str, x: f32, y: f32) {
-        gl.uniform_2_f32(gl.get_uniform_location(self.ID, name).as_ref(), x, y);
+        unsafe { gl.uniform_2_f32(gl.get_uniform_location(self.ID, name).as_ref(), x, y) };
     }
 
     #[allow(non_snake_case)]
     #[allow(clippy::missing_safety_doc)]
     /// ------------------------------------------------------------------------
     pub unsafe fn setMat4(&self, gl: &glow::Context, name: &str, mat: &[f32; 16]) {
-        gl.uniform_matrix_4_f32_slice(gl.get_uniform_location(self.ID, name).as_ref(), false, mat);
+        unsafe { gl.uniform_matrix_4_f32_slice(gl.get_uniform_location(self.ID, name).as_ref(), false, mat) };
     }
 }
