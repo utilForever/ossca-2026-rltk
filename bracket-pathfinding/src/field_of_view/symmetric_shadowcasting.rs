@@ -117,11 +117,12 @@ impl<T: Algorithm2D + ?Sized> FovScanner<'_, T> {
     fn scan(&mut self, first_line: Scanline) {
         let mut stack = vec![first_line];
         let mut prev_tile;
-        while let Some(mut scanline) = stack.pop() {
+        while let Some(scanline) = stack.pop() {
             if scanline.depth * scanline.depth > self.radius_2 {
                 continue;
             }
             prev_tile = None;
+            let mut current_start_slope = scanline.start_slope;
             for tile in scanline.tiles() {
                 let tile_point = self.quadrant.transform(tile);
                 let dx = tile_point.x - self.quadrant.origin.x;
@@ -132,10 +133,11 @@ impl<T: Algorithm2D + ?Sized> FovScanner<'_, T> {
                     }
                     if let Some(prev_tile) = prev_tile {
                         if self.is_opaque(prev_tile) && !self.is_opaque(tile) {
-                            scanline.start_slope = slope(tile);
+                            current_start_slope = slope(tile);
                         }
                         if !self.is_opaque(prev_tile) && self.is_opaque(tile) {
                             let mut next_line = scanline.next();
+                            next_line.start_slope = current_start_slope;
                             next_line.end_slope = slope(tile);
                             stack.push(next_line);
                         }
@@ -145,7 +147,9 @@ impl<T: Algorithm2D + ?Sized> FovScanner<'_, T> {
             }
             if let Some(prev_tile) = prev_tile {
                 if !self.is_opaque(prev_tile) {
-                    stack.push(scanline.next());
+                    let mut next_line = scanline.next();
+                    next_line.start_slope = current_start_slope;
+                    stack.push(next_line);
                 }
             }
         }
