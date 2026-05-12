@@ -1,4 +1,6 @@
-pub use winit::event::VirtualKeyCode;
+#[path = "../dummy/keycodes.rs"]
+mod keycodes;
+pub use keycodes::VirtualKeyCode;
 mod init;
 pub mod shader_strings;
 pub use init::*;

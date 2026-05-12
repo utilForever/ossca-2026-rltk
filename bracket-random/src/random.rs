@@ -1,34 +1,10 @@
 #[cfg(feature = "parsing")]
 use crate::prelude::{parse_dice_string, DiceParseError, DiceType};
-use rand::{Rng, RngExt, SeedableRng};
-use rand_xorshift::XorShiftRng;
+use rand::{rngs::SysRng, Rng, RngExt, SeedableRng};
+use rand_chacha::ChaCha12Rng;
 
 #[cfg(feature = "serde")]
 use serde_crate::{Deserialize, Serialize};
-
-#[cfg(target_arch = "wasm32")]
-fn get_seed() -> u64 {
-    let mut buf = [0u8; 8];
-    if crate::js_seed::getrandom_inner(&mut buf).is_ok() {
-        u64::from_be_bytes(buf)
-    } else {
-        js_sys::Date::now() as u64
-    }
-}
-
-#[cfg(not(target_arch = "wasm32"))]
-fn get_seed() -> u64 {
-    let mut buf = [0u8; 8];
-    if getrandom::getrandom(&mut buf).is_ok() {
-        u64::from_be_bytes(buf)
-    } else {
-        use std::time::{SystemTime, UNIX_EPOCH};
-        SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .unwrap()
-            .as_secs()
-    }
-}
 
 #[derive(Clone)]
 #[cfg_attr(
@@ -37,20 +13,21 @@ fn get_seed() -> u64 {
     serde(crate = "serde_crate")
 )]
 pub struct RandomNumberGenerator {
-    rng: XorShiftRng,
+    rng: ChaCha12Rng,
 }
 
 impl RandomNumberGenerator {
     /// Creates a new RNG from a randomly generated seed
-    #[allow(clippy::new_without_default)] // XorShiftRng doesn't have a Default, so we don't either
+    #[allow(clippy::new_without_default)] // ChaCha12Rng doesn't have a Default, so we don't either
     pub fn new() -> RandomNumberGenerator {
-        let rng: XorShiftRng = SeedableRng::seed_from_u64(get_seed());
+        let rng = ChaCha12Rng::try_from_rng(&mut SysRng)
+            .expect("failed to seed ChaCha12Rng from system RNG");
         RandomNumberGenerator { rng }
     }
 
     /// Creates a new RNG from a specific seed
     pub fn seeded(seed: u64) -> RandomNumberGenerator {
-        let rng: XorShiftRng = SeedableRng::seed_from_u64(seed);
+        let rng: ChaCha12Rng = SeedableRng::seed_from_u64(seed);
         RandomNumberGenerator { rng }
     }
 
@@ -127,7 +104,7 @@ impl RandomNumberGenerator {
 
     /// Get underlying RNG implementation for use in traits / algorithms exposed by
     /// other crates (eg. `rand` itself)
-    pub fn get_rng(&mut self) -> &mut XorShiftRng {
+    pub fn get_rng(&mut self) -> &mut impl Rng {
         &mut self.rng
     }
 }
@@ -135,25 +112,30 @@ impl RandomNumberGenerator {
 #[cfg(test)]
 mod tests {
     use crate::prelude::RandomNumberGenerator;
+    use rand::Rng;
 
+    #[cfg(feature = "parsing")]
     #[test]
     fn roll_str_1d6() {
         let mut rng = RandomNumberGenerator::new();
         assert!(rng.roll_str("1d6").is_ok());
     }
 
+    #[cfg(feature = "parsing")]
     #[test]
     fn roll_str_3d6plus1() {
         let mut rng = RandomNumberGenerator::new();
         assert!(rng.roll_str("3d6+1").is_ok());
     }
 
+    #[cfg(feature = "parsing")]
     #[test]
     fn roll_str_3d20minus1() {
         let mut rng = RandomNumberGenerator::new();
         assert!(rng.roll_str("3d20-1").is_ok());
     }
 
+    #[cfg(feature = "parsing")]
     #[test]
     fn roll_str_error() {
         let mut rng = RandomNumberGenerator::new();
@@ -207,10 +189,23 @@ mod tests {
         }
     }
 
+    #[test]
+    fn seeded_rngs_match() {
+        let mut rng1 = RandomNumberGenerator::seeded(1000);
+        let mut rng2 = RandomNumberGenerator::seeded(1000);
+        assert_eq!(rng1.next_u64(), rng2.next_u64());
+    }
+
+    #[test]
+    fn get_rng_exposes_rng() {
+        let mut rng1 = RandomNumberGenerator::seeded(1000);
+        let mut rng2 = RandomNumberGenerator::seeded(1000);
+        assert_eq!(rng1.next_u64(), rng2.get_rng().next_u64());
+    }
+
     #[cfg(feature = "serde")]
     #[test]
     fn serialize_rng() {
-        use serde_crate::{Deserialize, Serialize};
         let mut rng = RandomNumberGenerator::seeded(1000);
         let serialized = serde_json::to_string(&rng).unwrap();
         let n = rng.range(0, 100);

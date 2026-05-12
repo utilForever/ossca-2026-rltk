@@ -75,6 +75,64 @@ impl RectF {
         }
     }
 
+    /// Returns a rectangle with ordered coordinates.
+    #[must_use]
+    pub fn normalized(&self) -> RectF {
+        RectF {
+            x1: self.x1.min(self.x2),
+            y1: self.y1.min(self.y2),
+            x2: self.x1.max(self.x2),
+            y2: self.y1.max(self.y2),
+        }
+    }
+
+    /// Returns the rectangle's area.
+    #[must_use]
+    pub fn area(&self) -> f32 {
+        self.width() * self.height()
+    }
+
+    /// Returns true if the rectangle has zero width or height.
+    #[must_use]
+    pub fn is_empty(&self) -> bool {
+        self.width() <= 0.0 || self.height() <= 0.0
+    }
+
+    /// Returns true if the other rectangle's bounds are fully inside this rectangle.
+    #[must_use]
+    pub fn contains_rect(&self, other: &RectF) -> bool {
+        let bounds = self.normalized();
+        let candidate = other.normalized();
+
+        candidate.x1 >= bounds.x1
+            && candidate.x2 <= bounds.x2
+            && candidate.y1 >= bounds.y1
+            && candidate.y2 <= bounds.y2
+    }
+
+    /// Returns the non-empty overlapping area between this rectangle and another.
+    #[must_use]
+    pub fn intersection(&self, other: &RectF) -> Option<RectF> {
+        let self_bounds = self.normalized();
+        let other_bounds = other.normalized();
+
+        let left = self_bounds.x1.max(other_bounds.x1);
+        let top = self_bounds.y1.max(other_bounds.y1);
+        let right = self_bounds.x2.min(other_bounds.x2);
+        let bottom = self_bounds.y2.min(other_bounds.y2);
+
+        if left < right && top < bottom {
+            Some(RectF {
+                x1: left,
+                x2: right,
+                y1: top,
+                y2: bottom,
+            })
+        } else {
+            None
+        }
+    }
+
     /// Returns true if this overlaps with other
     #[must_use]
     pub fn intersect(&self, other: &RectF) -> bool {
@@ -119,5 +177,100 @@ impl ops::Add<RectF> for RectF {
         self.y1 += rhs.y1;
         self.y2 = self.y1 + h;
         self
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::prelude::{PointF, RectF};
+
+    fn assert_rectf_close(actual: RectF, expected: RectF) {
+        assert!((actual.x1 - expected.x1).abs() < f32::EPSILON);
+        assert!((actual.y1 - expected.y1).abs() < f32::EPSILON);
+        assert!((actual.x2 - expected.x2).abs() < f32::EPSILON);
+        assert!((actual.y2 - expected.y2).abs() < f32::EPSILON);
+    }
+
+    #[test]
+    fn test_dimensions() {
+        let rect = RectF::with_size(0.0, 0.0, 10.0, 10.0);
+        assert!((rect.width() - 10.0).abs() < f32::EPSILON);
+        assert!((rect.height() - 10.0).abs() < f32::EPSILON);
+    }
+
+    #[test]
+    fn test_normalized() {
+        let rect = RectF::with_exact(10.0, 20.0, 5.0, 15.0);
+        assert_rectf_close(rect.normalized(), RectF::with_exact(5.0, 15.0, 10.0, 20.0));
+    }
+
+    #[test]
+    fn test_area() {
+        let rect = RectF::with_size(0.0, 0.0, 10.0, 5.0);
+        assert!((rect.area() - 50.0).abs() < f32::EPSILON);
+    }
+
+    #[test]
+    fn test_is_empty() {
+        assert!(RectF::with_size(0.0, 0.0, 0.0, 5.0).is_empty());
+        assert!(RectF::with_size(0.0, 0.0, 5.0, 0.0).is_empty());
+        assert!(!RectF::with_size(0.0, 0.0, 5.0, 5.0).is_empty());
+    }
+
+    #[test]
+    fn test_contains_rect() {
+        let bounds = RectF::with_size(0.0, 0.0, 10.0, 10.0);
+        let inside = RectF::with_size(2.0, 2.0, 3.0, 3.0);
+        let outside = RectF::with_size(8.0, 8.0, 3.0, 3.0);
+
+        assert!(bounds.contains_rect(&inside));
+        assert!(!bounds.contains_rect(&outside));
+    }
+
+    #[test]
+    fn test_intersection() {
+        let bounds = RectF::with_size(0.0, 0.0, 10.0, 10.0);
+        let overlapping = RectF::with_size(5.0, 5.0, 10.0, 10.0);
+        let touching = RectF::with_size(10.0, 10.0, 5.0, 5.0);
+
+        assert_rectf_close(
+            bounds.intersection(&overlapping).unwrap(),
+            RectF::with_exact(5.0, 5.0, 10.0, 10.0),
+        );
+        assert!(bounds.intersection(&touching).is_none());
+    }
+
+    #[test]
+    fn test_add() {
+        let rect = RectF::with_size(0.0, 0.0, 10.0, 10.0) + RectF::with_size(1.0, 1.0, 1.0, 1.0);
+
+        assert_rectf_close(rect, RectF::with_exact(1.0, 1.0, 11.0, 11.0));
+    }
+
+    #[test]
+    fn test_intersect() {
+        let r1 = RectF::with_size(0.0, 0.0, 10.0, 10.0);
+        let r2 = RectF::with_size(5.0, 5.0, 10.0, 10.0);
+        let r3 = RectF::with_size(100.0, 100.0, 5.0, 5.0);
+
+        assert!(r1.intersect(&r2));
+        assert!(!r1.intersect(&r3));
+    }
+
+    #[test]
+    fn test_center() {
+        let r1 = RectF::with_size(0.0, 0.0, 10.0, 10.0);
+        let center = r1.center();
+
+        assert!((center.x - 5.0).abs() < f32::EPSILON);
+        assert!((center.y - 5.0).abs() < f32::EPSILON);
+    }
+
+    #[test]
+    fn test_point_in_rect() {
+        let r1 = RectF::with_size(0.0, 0.0, 10.0, 10.0);
+
+        assert!(r1.point_in_rect(PointF { x: 5.0, y: 5.0 }));
+        assert!(!r1.point_in_rect(PointF { x: 100.0, y: 100.0 }));
     }
 }

@@ -17,7 +17,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
       - name: Checkout sources
         uses: actions/checkout@v6
@@ -82,3 +82,31 @@ jobs:
         uses: actions/checkout@v6
       - name: Audit Rust dependencies
         uses: actions-rust-lang/audit@v1
+
+  wasm_build:
+    name: 🕸️ WASM Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v6
+      - name: Install stable toolchain with wasm32 target
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - name: Cache cargo dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          key: wasm32
+      # Scoped to `-p bracket-terminal` deliberately. Do NOT widen to `--workspace`:
+      # `bracket-bevy` depends on Bevy 0.9 with the `x11` feature
+      # (bracket-bevy/Cargo.toml lines 18-29), which has no wasm32 build today.
+      # Only `bracket-random` and `bracket-terminal` carry `#[cfg(target_arch = "wasm32")]`
+      # divergent code paths; `bracket-terminal`'s examples transitively exercise both.
+      # Two examples are built (not one) so an upstream rename/deletion of either
+      # `dwarfmap` or `hello_terminal` still leaves wasm coverage in place.
+      # TODO: once Bevy block is cfg-gated for non-wasm32 (follow-up issue #N),
+      # collapse to `cargo build --workspace --target wasm32-unknown-unknown`.
+      - name: Build dwarfmap example for wasm32
+        run: cargo build -p bracket-terminal --example dwarfmap --target wasm32-unknown-unknown
+      - name: Build hello_terminal example for wasm32
+        run: cargo build -p bracket-terminal --example hello_terminal --target wasm32-unknown-unknown

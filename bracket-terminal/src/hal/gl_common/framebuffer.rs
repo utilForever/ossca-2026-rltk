@@ -37,7 +37,7 @@ impl Framebuffer {
                 0,
                 glow::RGBA,
                 glow::FLOAT,
-                None,
+                glow::PixelUnpackData::Slice(None),
             );
             gl.tex_parameter_i32(
                 glow::TEXTURE_2D,
@@ -97,7 +97,7 @@ impl Framebuffer {
                 0,
                 glow::RGBA,
                 glow::UNSIGNED_BYTE,
-                None,
+                glow::PixelUnpackData::Slice(None),
             );
 
             gl.tex_parameter_i32(

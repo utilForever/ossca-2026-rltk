@@ -141,7 +141,6 @@ mod tests {
     #[cfg(feature = "serde")]
     #[test]
     fn serialize_parsing() {
-        use serde_crate::{Deserialize, Serialize};
         let d = parse_dice_string("3d6 - 2").unwrap();
         let serialized = serde_json::to_string(&d).unwrap();
         let deserialized: DiceType = serde_json::from_str(&serialized).unwrap();

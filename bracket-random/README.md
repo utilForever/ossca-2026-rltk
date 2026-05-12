@@ -1,6 +1,6 @@
 # bracket-random
 
-Part of the `bracket-lib` family, `bracket-random` is focused on providing dice-oriented random numbers. It also (optionally) includes parsing of RPG-style dice strings (e.g. `3d6+12`). It is targeted at games, particularly RPGs. It uses the high-performance `XorShift` algorithm for random number generation.
+Part of the `bracket-lib` family, `bracket-random` is focused on providing dice-oriented random numbers. It also (optionally) includes parsing of RPG-style dice strings (e.g. `3d6+12`). It is targeted at games, particularly RPGs. It uses the high-performance `ChaCha12` algorithm for random number generation.
 
 ## Using bracket-random
 
@@ -52,7 +52,7 @@ It supports `1d6`, `3d6+1`, and `5d6-1` formats. If you turn off the `parsing` f
 
 * `parsing` enables parsing of dice types as strings.
 * `serde` makes the `DiceType` structure serializable.
-* If you are compiling for `wasm32-unknown-unknown`, it automatically includes `wasm-bindgen`.
+* If you are compiling for `wasm32-unknown-unknown`, it enables JavaScript randomness support through `getrandom`.
 
 ## Examples
 

@@ -131,7 +131,7 @@ impl Font {
                 0,
                 format,
                 glow::UNSIGNED_BYTE,
-                Some(&data),
+                glow::PixelUnpackData::Slice(Some(&data)),
             );
         }
 
