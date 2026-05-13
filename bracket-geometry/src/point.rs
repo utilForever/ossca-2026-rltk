@@ -124,10 +124,10 @@ impl Point {
         Self::new(v.x as i32, v.y as i32)
     }
 
-    /// Returns a point containing the absolute value of each component.
+    /// Returns a point containing the saturating absolute value of each component.
     #[must_use]
     pub fn abs(self) -> Self {
-        Self::new(self.x.abs(), self.y.abs())
+        Self::new(self.x.saturating_abs(), self.y.saturating_abs())
     }
 
     /// Returns a point containing the smaller value of each component.
@@ -371,6 +371,7 @@ mod tests {
     #[test]
     fn point_abs() {
         assert_eq!(Point::new(-3, 2).abs(), Point::new(3, 2));
+        assert_eq!(Point::new(i32::MIN, -3).abs(), Point::new(i32::MAX, 3));
     }
 
     #[test]

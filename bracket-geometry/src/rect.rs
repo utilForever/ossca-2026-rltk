@@ -76,7 +76,10 @@ impl Rect {
         }
     }
 
-    /// Creates a rectangle from two opposite corner points.
+    /// Creates a half-open rectangle from two opposite bounds points.
+    ///
+    /// The smaller point becomes the inclusive minimum bound, and the larger point becomes the
+    /// exclusive maximum bound.
     #[must_use]
     pub fn from_points(p0: Point, p1: Point) -> Rect {
         Rect {
@@ -145,21 +148,21 @@ impl Rect {
         }
     }
 
-    /// Returns the top-left corner of the rectangle.
+    /// Returns the rectangle's inclusive top-left bound.
     #[must_use]
     pub fn top_left(&self) -> Point {
         let bounds = self.normalized();
         Point::new(bounds.x1, bounds.y1)
     }
 
-    /// Returns the bottom-right corner of the rectangle.
+    /// Returns the rectangle's exclusive bottom-right bound.
     #[must_use]
     pub fn bottom_right(&self) -> Point {
         let bounds = self.normalized();
         Point::new(bounds.x2, bounds.y2)
     }
 
-    /// Returns the rectangle corners in clockwise order, starting at the top-left corner.
+    /// Returns the rectangle's bounds in clockwise order, starting at the inclusive top-left bound.
     #[must_use]
     pub fn corners(&self) -> [Point; 4] {
         let bounds = self.normalized();
