@@ -500,6 +500,37 @@ mod tests {
     }
 
     #[rstest]
+    #[case(RGB::from_f32(0.25, 0.5, 0.75) + 0.125, 0.375, 0.625, 0.875)]
+    #[case(
+        RGB::from_f32(0.25, 0.5, 0.75) + RGB::from_f32(0.125, 0.25, 0.125),
+        0.375,
+        0.75,
+        0.875
+    )]
+    #[case(RGB::from_f32(0.25, 0.5, 0.75) - 0.125, 0.125, 0.375, 0.625)]
+    #[case(
+        RGB::from_f32(0.25, 0.5, 0.75) - RGB::from_f32(0.125, 0.25, 0.125),
+        0.125,
+        0.25,
+        0.625
+    )]
+    #[case(RGB::from_f32(0.25, 0.5, 0.75) * 0.5, 0.125, 0.25, 0.375)]
+    #[case(
+        RGB::from_f32(0.25, 0.5, 0.75) * RGB::from_f32(0.125, 0.25, 0.125),
+        0.03125,
+        0.125,
+        0.09375
+    )]
+    fn arithmetic_operators_apply_component_wise(
+        #[case] rgb: RGB,
+        #[case] r: f32,
+        #[case] g: f32,
+        #[case] b: f32,
+    ) {
+        assert_rgb_eq(rgb, r, g, b);
+    }
+
+    #[rstest]
     #[case(RGB::from_f32(1.0, 0.0, 0.0), 0.0, 1.0, 1.0)]
     #[case(RGB::from_f32(0.0, 1.0, 0.0), 120.0 / 360.0, 1.0, 1.0)]
     #[case(RGB::from_f32(0.0, 0.0, 1.0), 240.0 / 360.0, 1.0, 1.0)]
@@ -601,6 +632,34 @@ mod tests {
         let rgb = RGB::named(BLUE);
 
         assert_rgb_eq(rgb, 0.0, 0.0, 1.0);
+    }
+
+    #[test]
+    fn to_greyscale_uses_luminance_weights() {
+        let grey = RGB::from_f32(1.0, 0.0, 0.0).to_greyscale();
+        assert_rgb_eq(grey, 0.2126, 0.2126, 0.2126);
+    }
+
+    #[test]
+    fn desaturate_keeps_value_and_removes_saturation() {
+        let desaturated = RGB::from_f32(1.0, 0.0, 0.0).desaturate();
+        assert_rgb_eq(desaturated, 1.0, 1.0, 1.0);
+    }
+
+    #[rstest]
+    #[case(0.0, 0.0, 0.0, 0.0)]
+    #[case(0.5, 0.5, 0.5, 0.5)]
+    #[case(1.0, 1.0, 1.0, 1.0)]
+    fn lerp_interpolates_between_colors(
+        #[case] percent: f32,
+        #[case] r: f32,
+        #[case] g: f32,
+        #[case] b: f32,
+    ) {
+        let black = RGB::named(BLACK);
+        let white = RGB::named(WHITE);
+
+        assert_rgb_eq(black.lerp(white, percent), r, g, b);
     }
 
     #[test]
