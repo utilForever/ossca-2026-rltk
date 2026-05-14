@@ -506,6 +506,27 @@ mod tests {
     }
 
     #[rstest]
+    #[case(RGBA::from(RGB::from_f32(0.25, 0.5, 0.75)), 0.25, 0.5, 0.75, 1.0)]
+    #[case(
+        RGBA::from((64, 128, 255, 32)),
+        64.0 / 255.0,
+        128.0 / 255.0,
+        1.0,
+        32.0 / 255.0
+    )]
+    #[case(RGBA::from((64, 128, 255)), 64.0 / 255.0, 128.0 / 255.0, 1.0, 1.0)]
+    #[case(RGBA::from([-1.0, 0.5, 2.0, 0.25]), 0.0, 0.5, 1.0, 0.25)]
+    fn conversions_fill_or_preserve_alpha(
+        #[case] rgba: RGBA,
+        #[case] r: f32,
+        #[case] g: f32,
+        #[case] b: f32,
+        #[case] a: f32,
+    ) {
+        assert_rgba_eq(rgba, r, g, b, a);
+    }
+
+    #[rstest]
     #[case("#FF0000FF", 1.0, 0.0, 0.0, 1.0)]
     #[case("#00FF00FF", 0.0, 1.0, 0.0, 1.0)]
     #[case("#0000FFFF", 0.0, 0.0, 1.0, 1.0)]
