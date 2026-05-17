@@ -24,7 +24,8 @@ pub mod algorithm_traits {
 pub mod color {
     pub use bracket_color::prelude::*;
 }
-/// bracket-geometry provides some geometric primitives (Point, Point3D, Rect),
+/// bracket-geometry provides some geometric primitives (Point, Point3D, Rect,
+/// Curve),
 /// support functions and distance calculations. It also includes Bresenham's
 /// line algorithm, a vector line algorithm, and Bresenham's Circle algorithm.
 pub mod geometry {
