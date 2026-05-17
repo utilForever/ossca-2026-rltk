@@ -8,7 +8,7 @@ struct State {
 
 impl GameState for State {
     fn tick(&mut self, ctx: &mut BTerm) {
-        if let Some(VirtualKeyCode::C) = ctx.key {
+        if let Some(KeyCode::KeyC) = ctx.key {
             ctx.cls()
         }
 

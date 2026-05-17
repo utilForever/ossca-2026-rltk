@@ -23,12 +23,12 @@ impl GameState for State {
 
         if let Some(key) = ctx.key {
             match key {
-                VirtualKeyCode::Key1 => ctx.set_active_font(0, true),
-                VirtualKeyCode::Key2 => ctx.set_active_font(1, true),
-                VirtualKeyCode::Key3 => ctx.set_active_font(2, true),
-                VirtualKeyCode::Key4 => ctx.set_active_font(3, true),
-                VirtualKeyCode::Key5 => ctx.set_active_font(4, true),
-                VirtualKeyCode::S => ctx.screenshot("test.png"),
+                KeyCode::Digit1 => ctx.set_active_font(0, true),
+                KeyCode::Digit2 => ctx.set_active_font(1, true),
+                KeyCode::Digit3 => ctx.set_active_font(2, true),
+                KeyCode::Digit4 => ctx.set_active_font(3, true),
+                KeyCode::Digit5 => ctx.set_active_font(4, true),
+                KeyCode::KeyS => ctx.screenshot("test.png"),
                 _ => {}
             }
         }

@@ -1,6 +1,6 @@
 use parking_lot::Mutex;
 
-pub use winit::event::VirtualKeyCode;
+pub use winit::keyboard::KeyCode;
 
 mod main_loop;
 pub use main_loop::*;

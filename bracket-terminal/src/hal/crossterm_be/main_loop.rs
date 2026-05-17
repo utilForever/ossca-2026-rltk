@@ -24,7 +24,7 @@ pub fn main_loop<GS: GameState>(mut bterm: BTerm, mut gamestate: GS) -> BResult<
     let mut frames = 0;
 
     // Panic handler to reset terminal
-    ctrlc::set_handler(move || {
+    let _ = ctrlc::set_handler(move || {
         reset_terminal();
     });
 
@@ -152,7 +152,7 @@ fn reset_terminal() {
     execute!(stdout(), crossterm::cursor::Show).expect("Command fail");
     execute!(stdout(), crossterm::terminal::LeaveAlternateScreen).expect("Command fail");
     execute!(stdout(), crossterm::event::DisableMouseCapture).expect("Command fail");
-    crossterm::terminal::disable_raw_mode();
+    let _ = crossterm::terminal::disable_raw_mode();
 }
 
 #[derive(Clone, PartialEq)]

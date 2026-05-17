@@ -277,10 +277,13 @@ pub fn main_loop<GS: GameState>(mut bterm: BTerm, mut gamestate: GS) -> BResult<
                         })
                     }
                     WindowEvent::KeyboardInput { event, .. } => {
-                        if let Some(key) = physical_key_to_virtual_keycode(&event.physical_key) {
-                            bterm.on_key(key, 0, event.state == ElementState::Pressed);
+                        if let winit::keyboard::PhysicalKey::Code(key_code) = event.physical_key {
+                            bterm.on_key(
+                                key_code, 0, event.state == winit::event::ElementState::Pressed
+                            );
                         }
-                        if event.state == ElementState::Pressed {
+
+                        if event.state == winit::event::ElementState::Pressed {
                             if let Some(text) = event.text.as_ref() {
                                 for ch in text.chars() {
                                     bterm.on_event(BEvent::Character { c: ch });

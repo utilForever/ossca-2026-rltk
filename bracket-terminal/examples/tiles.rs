@@ -90,10 +90,10 @@ impl GameState for State {
                     VirtualKeyCode::Numpad3 => self.move_player(1, 1),
 
                     // Cursors
-                    VirtualKeyCode::Up => self.move_player(0, -1),
-                    VirtualKeyCode::Down => self.move_player(0, 1),
-                    VirtualKeyCode::Left => self.move_player(-1, 0),
-                    VirtualKeyCode::Right => self.move_player(1, 0),
+                    KeyCode::ArrowUp    => self.move_player(0, -1),
+                    KeyCode::ArrowDown  => self.move_player(0, 1),
+                    KeyCode::ArrowLeft  => self.move_player(-1, 0),
+                    KeyCode::ArrowRight => self.move_player(1, 0),
 
                     _ => {} // Ignore all the other possibilities
                 }

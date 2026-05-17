@@ -44,11 +44,11 @@ impl GameState for State {
             None => {} // Nothing happened
             Some(key) => {
                 // A key is pressed or held
-                if let VirtualKeyCode::B = key {
+                if let KeyCode::KeyB = key {
                     self.burn = !self.burn;
                     ctx.with_post_scanlines(self.burn);
                 }
-                if let VirtualKeyCode::C = key {
+                if let KeyCode::KeyC = key {
                     let mut rng = RandomNumberGenerator::new();
                     let n = rng.range(0, 6);
                     match n {

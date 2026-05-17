@@ -1,4 +1,4 @@
-pub use crate::prelude::VirtualKeyCode;
+pub use crate::prelude::KeyCode;
 pub use bracket_geometry::prelude::Point;
 
 /// Available device events
@@ -42,7 +42,7 @@ pub enum BEvent {
 
     /// A key on the keyboard was pressed or released.
     KeyboardInput {
-        key: VirtualKeyCode,
+        key: KeyCode,
         scan_code: u32,
         pressed: bool,
     },

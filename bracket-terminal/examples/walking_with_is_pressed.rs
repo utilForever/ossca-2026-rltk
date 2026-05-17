@@ -42,18 +42,18 @@ impl State {
         };
 
         // Make the keyboard mappings
-        state.keymap.insert(VirtualKeyCode::Numpad8, (0, -1));
-        state.keymap.insert(VirtualKeyCode::Numpad4, (-1, 0));
-        state.keymap.insert(VirtualKeyCode::Numpad6, (1, 0));
-        state.keymap.insert(VirtualKeyCode::Numpad2, (0, 1));
-        state.keymap.insert(VirtualKeyCode::Numpad7, (-1, -1));
-        state.keymap.insert(VirtualKeyCode::Numpad9, (1, -1));
-        state.keymap.insert(VirtualKeyCode::Numpad1, (-1, 1));
-        state.keymap.insert(VirtualKeyCode::Numpad3, (1, 1));
-        state.keymap.insert(VirtualKeyCode::Up, (0, -1));
-        state.keymap.insert(VirtualKeyCode::Down, (0, 1));
-        state.keymap.insert(VirtualKeyCode::Left, (-1, 0));
-        state.keymap.insert(VirtualKeyCode::Right, (1, 0));
+        state.keymap.insert(KeyCode::Numpad8, (0, -1));
+        state.keymap.insert(KeyCode::Numpad4, (-1, 0));
+        state.keymap.insert(KeyCode::Numpad6, (1, 0));
+        state.keymap.insert(KeyCode::Numpad2, (0, 1));
+        state.keymap.insert(KeyCode::Numpad7, (-1, -1));
+        state.keymap.insert(KeyCode::Numpad9, (1, -1));
+        state.keymap.insert(KeyCode::Numpad1, (-1, 1));
+        state.keymap.insert(KeyCode::Numpad3, (1, 1));
+        state.keymap.insert(KeyCode::ArrowUp, (0, -1));
+        state.keymap.insert(KeyCode::ArrowDown, (0, 1));
+        state.keymap.insert(KeyCode::ArrowLeft, (-1, 0));
+        state.keymap.insert(KeyCode::ArrowRight, (1, 0));
 
         // Make the boundaries walls
         for x in 0..80 {

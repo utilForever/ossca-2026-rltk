@@ -1,5 +1,5 @@
 use super::BEvent;
-use crate::prelude::{BTerm, VirtualKeyCode};
+use crate::prelude::{BTerm, KeyCode};
 use bracket_geometry::prelude::Point;
 use std::collections::{HashSet, VecDeque};
 
@@ -14,7 +14,7 @@ pub(crate) fn clear_input_state(term: &mut BTerm) {
 /// Represents the current input state. The old key/mouse fields remain available for compatibility.
 #[derive(Clone, Debug)]
 pub struct Input {
-    keys_down: HashSet<VirtualKeyCode>,
+    keys_down: HashSet<KeyCode>,
     scancodes: HashSet<u32>,
     mouse_buttons: HashSet<usize>,
     mouse_pixel: (f64, f64),
@@ -40,7 +40,7 @@ impl Input {
     }
 
     /// Checks to see if a key is pressed. True if it is, false otherwise.
-    pub fn is_key_pressed(&self, key: VirtualKeyCode) -> bool {
+    pub fn is_key_pressed(&self, key: KeyCode) -> bool {
         self.keys_down.contains(&key)
     }
 
@@ -66,7 +66,7 @@ impl Input {
     }
 
     /// HashSet of pressed keyboard scan codes
-    pub fn key_pressed_set(&self) -> &HashSet<VirtualKeyCode> {
+    pub fn key_pressed_set(&self) -> &HashSet<KeyCode> {
         &self.keys_down
     }
 
@@ -133,13 +133,13 @@ impl Input {
     }
 
     /// Internal - do not use
-    pub(crate) fn on_key_down(&mut self, key: VirtualKeyCode, scan_code: u32) {
+    pub(crate) fn on_key_down(&mut self, key: KeyCode, scan_code: u32) {
         self.keys_down.insert(key);
         self.scancodes.insert(scan_code);
     }
 
     /// Internal - do not use
-    pub(crate) fn on_key_up(&mut self, key: VirtualKeyCode, scan_code: u32) {
+    pub(crate) fn on_key_up(&mut self, key: KeyCode, scan_code: u32) {
         self.keys_down.remove(&key);
         self.scancodes.remove(&scan_code);
     }

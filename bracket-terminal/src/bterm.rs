@@ -4,7 +4,7 @@ use crate::{
     prelude::{
         init_raw, BEvent, CharacterTranslationMode, Console, FlexiConsole, Font, FontCharType,
         GameState, InitHints, Radians, RenderSprite, Shader, SimpleConsole, SpriteConsole,
-        SpriteSheet, TextAlign, VirtualKeyCode, XpFile, XpLayer, BACKEND, INPUT,
+        SpriteSheet, TextAlign, KeyCode, XpFile, XpLayer, BACKEND, INPUT,
     },
     BResult,
 };
@@ -57,7 +57,7 @@ pub struct BTerm {
     pub fps: f32,
     pub frame_time_ms: f32,
     pub active_console: usize,
-    pub key: Option<VirtualKeyCode>,
+    pub key: Option<KeyCode>,
     pub mouse_pos: (i32, i32),
     pub left_click: bool,
     pub shift: bool,
@@ -326,7 +326,7 @@ impl BTerm {
     }
 
     /// Internal: mark a key press
-    pub(crate) fn on_key(&mut self, key: VirtualKeyCode, scan_code: u32, pressed: bool) {
+    pub(crate) fn on_key(&mut self, key: KeyCode, scan_code: u32, pressed: bool) {
         let mut input = INPUT.lock();
         if pressed {
             self.key = Some(key);
@@ -1081,34 +1081,34 @@ pub fn main_loop<GS: GameState>(bterm: BTerm, gamestate: GS) -> BResult<()> {
 }
 
 /// For A-Z menus, translates the keys A through Z into 0..25
-pub fn letter_to_option(key: VirtualKeyCode) -> i32 {
+pub fn letter_to_option(key: KeyCode) -> i32 {
     match key {
-        VirtualKeyCode::A => 0,
-        VirtualKeyCode::B => 1,
-        VirtualKeyCode::C => 2,
-        VirtualKeyCode::D => 3,
-        VirtualKeyCode::E => 4,
-        VirtualKeyCode::F => 5,
-        VirtualKeyCode::G => 6,
-        VirtualKeyCode::H => 7,
-        VirtualKeyCode::I => 8,
-        VirtualKeyCode::J => 9,
-        VirtualKeyCode::K => 10,
-        VirtualKeyCode::L => 11,
-        VirtualKeyCode::M => 12,
-        VirtualKeyCode::N => 13,
-        VirtualKeyCode::O => 14,
-        VirtualKeyCode::P => 15,
-        VirtualKeyCode::Q => 16,
-        VirtualKeyCode::R => 17,
-        VirtualKeyCode::S => 18,
-        VirtualKeyCode::T => 19,
-        VirtualKeyCode::U => 20,
-        VirtualKeyCode::V => 21,
-        VirtualKeyCode::W => 22,
-        VirtualKeyCode::X => 23,
-        VirtualKeyCode::Y => 24,
-        VirtualKeyCode::Z => 25,
+        KeyCode::KeyA => 0,
+        KeyCode::KeyB => 1,
+        KeyCode::KeyC => 2,
+        KeyCode::KeyD => 3,
+        KeyCode::KeyE => 4,
+        KeyCode::KeyF => 5,
+        KeyCode::KeyG => 6,
+        KeyCode::KeyH => 7,
+        KeyCode::KeyI => 8,
+        KeyCode::KeyJ => 9,
+        KeyCode::KeyK => 10,
+        KeyCode::KeyL => 11,
+        KeyCode::KeyM => 12,
+        KeyCode::KeyN => 13,
+        KeyCode::KeyO => 14,
+        KeyCode::KeyP => 15,
+        KeyCode::KeyQ => 16,
+        KeyCode::KeyR => 17,
+        KeyCode::KeyS => 18,
+        KeyCode::KeyT => 19,
+        KeyCode::KeyU => 20,
+        KeyCode::KeyV => 21,
+        KeyCode::KeyW => 22,
+        KeyCode::KeyX => 23,
+        KeyCode::KeyY => 24,
+        KeyCode::KeyZ => 25,
         _ => -1,
     }
 }
