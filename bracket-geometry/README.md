@@ -1,6 +1,6 @@
 # bracket-geometry
 
-This crate provides geometry support for the overall `bracket-lib` system, and is useful stand-alone. It provides some geometric primitives (`Point`, `Point3D`, `Rect`), support functions and distance calculations. It also includes Bresenham's line algorithm, a vector line algorithm, and Bresenham's Circle algorithm.
+This crate provides geometry support for the overall `bracket-lib` system, and is useful stand-alone. It provides some geometric primitives (`Point`, `Point3D`, `Rect`, `Curve`), support functions and distance calculations. It also includes Bresenham's line algorithm, a vector line algorithm, and Bresenham's Circle algorithm.
 
 It uses UltraViolet for fast processing, and includes conversion functions to/from native UltraViolet types.
 
@@ -57,6 +57,17 @@ It provides quite a few helper functions:
 * `point_set` - returns a `HashSet` of all points in the rectangle.
 * `width` and `height` return the current dimensions of the rectangle.
 
+## Curve
+
+Represents a curve in 2D space by storing its control points:
+
+```rust
+use bracket_geometry::prelude::*;
+let curve = Curve::new(vec![Point::new(0, 0), Point::new(4, 8), Point::new(9, 2)]);
+assert_eq!(curve.first(), Some(Point::new(0, 0)));
+assert_eq!(curve.last(), Some(Point::new(9, 2)));
+```
+
 ## Line Plotting
 
 Line plotting is provided using Bresenham and vector algorithms. You can return points in the line as either a vector of `Point` objects, or an iterator.
@@ -105,7 +116,7 @@ println!("{:?}", DistanceAlg::Chebyshev.distance2d(Point::new(0,0), Point::new(5
 
 ## Feature Flags
 
-If you enable `serde`, it provides serialization/de-serialization via the `Serde` library for the `Point`, `Point3D` and `Rect` types.
+If you enable `serde`, it provides serialization/de-serialization via the `Serde` library for the `Point`, `Point3D`, `Rect` and `Curve` types.
 
 ## Examples
 
