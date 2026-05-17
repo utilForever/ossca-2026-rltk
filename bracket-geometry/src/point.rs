@@ -124,6 +124,41 @@ impl Point {
         Self::new(v.x as i32, v.y as i32)
     }
 
+    /// Returns a point containing the saturating absolute value of each component.
+    #[must_use]
+    pub fn abs(self) -> Self {
+        Self::new(self.x.saturating_abs(), self.y.saturating_abs())
+    }
+
+    /// Returns a point containing the smaller value of each component.
+    #[must_use]
+    pub fn component_min(self, other: Self) -> Self {
+        Self::new(self.x.min(other.x), self.y.min(other.y))
+    }
+
+    /// Returns a point containing the larger value of each component.
+    #[must_use]
+    pub fn component_max(self, other: Self) -> Self {
+        Self::new(self.x.max(other.x), self.y.max(other.y))
+    }
+
+    /// Clamps each component of this point between the matching components of `min` and `max`.
+    #[must_use]
+    pub fn clamp(self, min: Self, max: Self) -> Self {
+        let lower = min.component_min(max);
+        let upper = min.component_max(max);
+        Self::new(
+            self.x.clamp(lower.x, upper.x),
+            self.y.clamp(lower.y, upper.y),
+        )
+    }
+
+    /// Returns the sign of each component as -1, 0, or 1.
+    #[must_use]
+    pub fn signum(self) -> Self {
+        Self::new(self.x.signum(), self.y.signum())
+    }
+
     /*
     /// Creates a point from an `UltraViolet` vec2i
     pub fn from_vec2i(v: Vec2i) -> Self {
@@ -331,6 +366,50 @@ mod tests {
         let pt = Point::new(1, 2);
         assert_eq!(pt.x, 1);
         assert_eq!(pt.y, 2);
+    }
+
+    #[test]
+    fn point_abs() {
+        assert_eq!(Point::new(-3, 2).abs(), Point::new(3, 2));
+        assert_eq!(Point::new(i32::MIN, -3).abs(), Point::new(i32::MAX, 3));
+    }
+
+    #[test]
+    fn point_component_min() {
+        assert_eq!(
+            Point::new(10, 3).component_min(Point::new(5, 8)),
+            Point::new(5, 3)
+        );
+    }
+
+    #[test]
+    fn point_component_max() {
+        assert_eq!(
+            Point::new(10, 3).component_max(Point::new(5, 8)),
+            Point::new(10, 8)
+        );
+    }
+
+    #[test]
+    fn point_clamp() {
+        assert_eq!(
+            Point::new(15, -3).clamp(Point::new(0, 0), Point::new(10, 10)),
+            Point::new(10, 0)
+        );
+    }
+
+    #[test]
+    fn point_clamp_accepts_reversed_bounds() {
+        assert_eq!(
+            Point::new(15, -3).clamp(Point::new(10, 10), Point::new(0, 0)),
+            Point::new(10, 0)
+        );
+    }
+
+    #[test]
+    fn point_signum() {
+        assert_eq!(Point::new(3, -2).signum(), Point::new(1, -1));
+        assert_eq!(Point::new(0, 8).signum(), Point::new(0, 1));
     }
 
     #[test]

@@ -75,6 +75,20 @@ impl RectF {
         }
     }
 
+    /// Creates a half-open rectangle from two opposite bounds points.
+    ///
+    /// The smaller point becomes the inclusive minimum bound, and the larger point becomes the
+    /// exclusive maximum bound.
+    #[must_use]
+    pub fn from_points(p0: PointF, p1: PointF) -> RectF {
+        RectF {
+            x1: p0.x.min(p1.x),
+            y1: p0.y.min(p1.y),
+            x2: p0.x.max(p1.x),
+            y2: p0.y.max(p1.y),
+        }
+    }
+
     /// Returns a rectangle with ordered coordinates.
     #[must_use]
     pub fn normalized(&self) -> RectF {
@@ -131,6 +145,50 @@ impl RectF {
         } else {
             None
         }
+    }
+
+    /// Returns the rectangle's inclusive top-left bound.
+    #[must_use]
+    pub fn top_left(&self) -> PointF {
+        let bounds = self.normalized();
+        PointF {
+            x: bounds.x1,
+            y: bounds.y1,
+        }
+    }
+
+    /// Returns the rectangle's exclusive bottom-right bound.
+    #[must_use]
+    pub fn bottom_right(&self) -> PointF {
+        let bounds = self.normalized();
+        PointF {
+            x: bounds.x2,
+            y: bounds.y2,
+        }
+    }
+
+    /// Returns the rectangle's bounds in clockwise order, starting at the inclusive top-left bound.
+    #[must_use]
+    pub fn corners(&self) -> [PointF; 4] {
+        let bounds = self.normalized();
+        [
+            PointF {
+                x: bounds.x1,
+                y: bounds.y1,
+            },
+            PointF {
+                x: bounds.x2,
+                y: bounds.y1,
+            },
+            PointF {
+                x: bounds.x2,
+                y: bounds.y2,
+            },
+            PointF {
+                x: bounds.x1,
+                y: bounds.y2,
+            },
+        ]
     }
 
     /// Returns true if this overlaps with other
@@ -199,6 +257,12 @@ mod tests {
     }
 
     #[test]
+    fn test_from_points() {
+        let rect = RectF::from_points(PointF { x: 10.0, y: 20.0 }, PointF { x: 5.0, y: 15.0 });
+        assert_rectf_close(rect, RectF::with_exact(5.0, 15.0, 10.0, 20.0));
+    }
+
+    #[test]
     fn test_normalized() {
         let rect = RectF::with_exact(10.0, 20.0, 5.0, 15.0);
         assert_rectf_close(rect.normalized(), RectF::with_exact(5.0, 15.0, 10.0, 20.0));
@@ -238,6 +302,39 @@ mod tests {
             RectF::with_exact(5.0, 5.0, 10.0, 10.0),
         );
         assert!(bounds.intersection(&touching).is_none());
+    }
+
+    #[test]
+    fn test_top_left() {
+        let rect = RectF::with_exact(10.0, 20.0, 5.0, 15.0);
+        let top_left = rect.top_left();
+        assert!((top_left.x - 5.0).abs() < f32::EPSILON);
+        assert!((top_left.y - 15.0).abs() < f32::EPSILON);
+    }
+
+    #[test]
+    fn test_bottom_right() {
+        let rect = RectF::with_exact(10.0, 20.0, 5.0, 15.0);
+        let bottom_right = rect.bottom_right();
+        assert!((bottom_right.x - 10.0).abs() < f32::EPSILON);
+        assert!((bottom_right.y - 20.0).abs() < f32::EPSILON);
+    }
+
+    #[test]
+    fn test_corners() {
+        let rect = RectF::with_exact(10.0, 20.0, 5.0, 15.0);
+        let corners = rect.corners();
+        let expected = [
+            PointF { x: 5.0, y: 15.0 },
+            PointF { x: 10.0, y: 15.0 },
+            PointF { x: 10.0, y: 20.0 },
+            PointF { x: 5.0, y: 20.0 },
+        ];
+
+        for (actual, expected) in corners.iter().zip(expected) {
+            assert!((actual.x - expected.x).abs() < f32::EPSILON);
+            assert!((actual.y - expected.y).abs() < f32::EPSILON);
+        }
     }
 
     #[test]

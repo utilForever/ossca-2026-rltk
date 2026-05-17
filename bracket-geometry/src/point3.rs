@@ -120,6 +120,54 @@ impl Point3 {
         Self::new(v.x as i32, v.y as i32, v.z as i32)
     }
 
+    /// Returns a point containing the saturating absolute value of each component.
+    #[must_use]
+    pub fn abs(self) -> Self {
+        Self::new(
+            self.x.saturating_abs(),
+            self.y.saturating_abs(),
+            self.z.saturating_abs(),
+        )
+    }
+
+    /// Returns a point containing the smaller value of each component.
+    #[must_use]
+    pub fn component_min(self, other: Self) -> Self {
+        Self::new(
+            self.x.min(other.x),
+            self.y.min(other.y),
+            self.z.min(other.z),
+        )
+    }
+
+    /// Returns a point containing the larger value of each component.
+    #[must_use]
+    pub fn component_max(self, other: Self) -> Self {
+        Self::new(
+            self.x.max(other.x),
+            self.y.max(other.y),
+            self.z.max(other.z),
+        )
+    }
+
+    /// Clamps each component of this point between the matching components of `min` and `max`.
+    #[must_use]
+    pub fn clamp(self, min: Self, max: Self) -> Self {
+        let lower = min.component_min(max);
+        let upper = min.component_max(max);
+        Self::new(
+            self.x.clamp(lower.x, upper.x),
+            self.y.clamp(lower.y, upper.y),
+            self.z.clamp(lower.z, upper.z),
+        )
+    }
+
+    /// Returns the sign of each component as -1, 0, or 1.
+    #[must_use]
+    pub fn signum(self) -> Self {
+        Self::new(self.x.signum(), self.y.signum(), self.z.signum())
+    }
+
     /*
     /// Converts into an UltraViolet Vec3
     pub fn to_vec3i(&self) -> Vec3i {
@@ -440,6 +488,52 @@ mod tests {
     #[test]
     fn point3_from_f32_tuple() {
         assert_eq!(Point3::from((1.0, 2.0, 3.0)), Point3::constant(1, 2, 3));
+    }
+
+    #[test]
+    fn point3_abs() {
+        assert_eq!(Point3::new(-3, 2, -5).abs(), Point3::new(3, 2, 5));
+        assert_eq!(
+            Point3::new(i32::MIN, -3, i32::MIN).abs(),
+            Point3::new(i32::MAX, 3, i32::MAX)
+        );
+    }
+
+    #[test]
+    fn point3_component_min() {
+        assert_eq!(
+            Point3::new(10, 3, -1).component_min(Point3::new(5, 8, 2)),
+            Point3::new(5, 3, -1)
+        );
+    }
+
+    #[test]
+    fn point3_component_max() {
+        assert_eq!(
+            Point3::new(10, 3, -1).component_max(Point3::new(5, 8, 2)),
+            Point3::new(10, 8, 2)
+        );
+    }
+
+    #[test]
+    fn point3_clamp() {
+        assert_eq!(
+            Point3::new(15, -3, 4).clamp(Point3::new(0, 0, 0), Point3::new(10, 10, 3)),
+            Point3::new(10, 0, 3)
+        );
+    }
+
+    #[test]
+    fn point3_clamp_accepts_reversed_bounds() {
+        assert_eq!(
+            Point3::new(15, -3, 4).clamp(Point3::new(10, 10, 3), Point3::new(0, 0, 0)),
+            Point3::new(10, 0, 3)
+        );
+    }
+
+    #[test]
+    fn point3_signum() {
+        assert_eq!(Point3::new(3, -2, 0).signum(), Point3::new(1, -1, 0));
     }
 
     #[test]
