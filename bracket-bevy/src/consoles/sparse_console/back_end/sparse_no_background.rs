@@ -1,5 +1,5 @@
 use super::SparseConsoleBackend;
-use crate::consoles::{scaler::FontScaler, BracketMesh, ScreenScaler, SparseConsole};
+use crate::consoles::{BracketMesh, ScreenScaler, SparseConsole, scaler::FontScaler};
 use bevy::{
     asset::RenderAssetUsages,
     mesh::{Indices, PrimitiveTopology},

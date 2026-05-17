@@ -4,7 +4,7 @@ use bracket_random::prelude::*;
 
 use crossterm::queue;
 use crossterm::style::{Color::Rgb, Print, SetForegroundColor};
-use std::io::{stdout, Write};
+use std::io::{Write, stdout};
 
 fn print_color(color: RGB, text: &str) {
     queue!(

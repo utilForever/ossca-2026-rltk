@@ -1,4 +1,4 @@
-use super::{gl_error, TextureId};
+use super::{TextureId, gl_error};
 use crate::BResult;
 use bracket_color::prelude::RGB;
 use bracket_embedding::prelude::EMBED;

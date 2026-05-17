@@ -1,7 +1,7 @@
+use wasm_bindgen::JsCast;
 /// This module handles binding external web elements, for example movement buttons.
 /// Based heavily on Zireael07's pull request, but modified to be significantly more generic.
 use wasm_bindgen::prelude::*;
-use wasm_bindgen::JsCast;
 
 pub static mut GLOBAL_BUTTON: Option<String> = None;
 

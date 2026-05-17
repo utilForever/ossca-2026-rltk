@@ -1,8 +1,8 @@
 use crate::rect::Rect;
 use bevy::prelude::Resource;
 use bracket_bevy::{
-    prelude::{to_cp437, RGB},
     BracketContext, RandomNumbers,
+    prelude::{RGB, to_cp437},
 };
 use std::cmp::{max, min};
 

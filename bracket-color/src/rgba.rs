@@ -1,4 +1,4 @@
-use crate::prelude::{HtmlColorConversionError, HSV, RGB};
+use crate::prelude::{HSV, HtmlColorConversionError, RGB};
 use std::convert::From;
 use std::ops;
 

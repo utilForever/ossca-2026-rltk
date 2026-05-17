@@ -1,7 +1,7 @@
 use bracket_geometry::prelude::*;
 use crossterm::queue;
 use crossterm::style::Print;
-use std::io::{stdout, Write};
+use std::io::{Write, stdout};
 
 fn main() {
     let mut fake_console: Vec<char> = vec!['.'; 100];

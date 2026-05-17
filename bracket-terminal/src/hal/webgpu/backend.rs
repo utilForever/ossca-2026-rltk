@@ -1,6 +1,6 @@
 //! Defines the BACKEND static used by wgpu.
 
-use crate::hal::{scaler::ScreenScaler, ConsoleBacking, PlatformGL};
+use crate::hal::{ConsoleBacking, PlatformGL, scaler::ScreenScaler};
 use lazy_static::*;
 use parking_lot::Mutex;
 

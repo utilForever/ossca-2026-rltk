@@ -1,7 +1,7 @@
-use crate::hal::scaler::FontScaler;
-use crate::hal::{Font, Shader, VertexArray, VertexArrayEntry, BACKEND};
-use crate::prelude::FlexiTile;
 use crate::BResult;
+use crate::hal::scaler::FontScaler;
+use crate::hal::{BACKEND, Font, Shader, VertexArray, VertexArrayEntry};
+use crate::prelude::FlexiTile;
 use bracket_color::prelude::RGBA;
 use bracket_geometry::prelude::PointF;
 

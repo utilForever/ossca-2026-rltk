@@ -1,9 +1,10 @@
 use crate::{
+    RandomNumbers, TerminalBuilderFont, TerminalLayer,
     consoles::{
-        apply_all_batches, default_gutter_size, replace_meshes, update_mouse_position,
-        update_timing, window_resize, ScreenScaler,
+        ScreenScaler, apply_all_batches, default_gutter_size, replace_meshes,
+        update_mouse_position, update_timing, window_resize,
     },
-    fix_images, load_terminals, update_consoles, RandomNumbers, TerminalBuilderFont, TerminalLayer,
+    fix_images, load_terminals, update_consoles,
 };
 use bevy::{
     diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin},

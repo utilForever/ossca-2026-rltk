@@ -1,7 +1,7 @@
 use super::{ColoredTextSpans, ConsoleFrontEnd, TextAlign};
 use crate::{
-    prelude::{string_to_cp437, to_cp437},
     BracketContext,
+    prelude::{string_to_cp437, to_cp437},
 };
 use bracket_color::prelude::*;
 

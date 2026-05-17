@@ -1,5 +1,5 @@
 use bracket_color::prelude::*;
-use std::io::{stdout, Write};
+use std::io::{Write, stdout};
 use util::print_color;
 
 fn main() {

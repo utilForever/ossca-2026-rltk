@@ -1,12 +1,12 @@
 //! Provides a wgpu mapping to the sparse consoele
 use super::index_array_helper::IndexBuffer;
 use super::vertex_array_helper::FloatBuffer;
+use crate::BResult;
 use crate::hal::{
-    scaler::{FontScaler, ScreenScaler},
     Font, Shader, WgpuLink,
+    scaler::{FontScaler, ScreenScaler},
 };
 use crate::prelude::SparseTile;
-use crate::BResult;
 use bracket_color::prelude::RGBA;
 use wgpu::{BufferUsages, RenderPipeline};
 

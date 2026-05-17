@@ -219,9 +219,11 @@ mod tests {
         for point in FieldOfViewAlg::SymmetricShadowcasting.field_of_view_set(c, radius, &map) {
             // Symmetry only holds for transparent tiles
             if !map.tiles[point.to_index(TESTMAP_W)] {
-                assert!(FieldOfViewAlg::SymmetricShadowcasting
-                    .field_of_view_set(point, radius, &map)
-                    .contains(&c));
+                assert!(
+                    FieldOfViewAlg::SymmetricShadowcasting
+                        .field_of_view_set(point, radius, &map)
+                        .contains(&c)
+                );
             }
         }
     }

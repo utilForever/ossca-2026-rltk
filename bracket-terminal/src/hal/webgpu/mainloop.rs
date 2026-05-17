@@ -1,17 +1,17 @@
 //! WGPU Main Loop
 
 use super::{
-    quadrender::QuadRender, ConsoleBacking, FancyConsoleBackend, Font, Framebuffer,
-    SimpleConsoleBackend, SparseConsoleBackend, SpriteConsoleBackend, WgpuLink, CONSOLE_BACKING,
+    CONSOLE_BACKING, ConsoleBacking, FancyConsoleBackend, Font, Framebuffer, SimpleConsoleBackend,
+    SparseConsoleBackend, SpriteConsoleBackend, WgpuLink, quadrender::QuadRender,
 };
 use crate::{
+    BResult,
     gamestate::{BTerm, GameState},
     hal::scaler::FontScaler,
-    input::{clear_input_state, BEvent},
+    input::{BEvent, clear_input_state},
     prelude::{
-        FlexiConsole, SimpleConsole, SparseConsole, SpriteConsole, BACKEND, BACKEND_INTERNAL, INPUT,
+        BACKEND, BACKEND_INTERNAL, FlexiConsole, INPUT, SimpleConsole, SparseConsole, SpriteConsole,
     },
-    BResult,
 };
 use bracket_geometry::prelude::Point;
 use std::mem::size_of;

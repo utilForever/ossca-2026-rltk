@@ -2,8 +2,8 @@
 // designed to be used safely from within ECS systems in a potentially
 // multi-threaded environment.
 
-use crate::prelude::{BTerm, FontCharType, TextAlign};
 use crate::BResult;
+use crate::prelude::{BTerm, FontCharType, TextAlign};
 use bracket_color::prelude::{ColorPair, RGBA};
 use bracket_geometry::prelude::{Point, PointF, Radians, Rect};
 use object_pool::{Pool, Reusable};

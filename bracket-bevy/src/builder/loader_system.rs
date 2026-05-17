@@ -1,6 +1,6 @@
 use crate::{
-    consoles::SparseConsole, fonts::FontStore, BTermBuilder, BracketContext, SimpleConsole,
-    TerminalLayer,
+    BTermBuilder, BracketContext, SimpleConsole, TerminalLayer, consoles::SparseConsole,
+    fonts::FontStore,
 };
 use bevy::{
     asset::UntypedHandle,

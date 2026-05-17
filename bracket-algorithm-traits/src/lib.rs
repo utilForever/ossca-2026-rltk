@@ -42,5 +42,5 @@ pub mod prelude {
     pub use crate::basemap::BaseMap;
 
     /// Since we use `SmallVec`, it's only polite to export it so you don't have to have multiple copies.
-    pub use smallvec::{smallvec, SmallVec};
+    pub use smallvec::{SmallVec, smallvec};
 }

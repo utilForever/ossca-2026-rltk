@@ -44,7 +44,9 @@ pub trait Algorithm3D: BaseMap {
 
     /// Dimensions
     fn dimensions(&self) -> Point3 {
-        panic!("You must either define the dimensions function (trait Algorithm3D) on your map, or define the various point3d_to_index and index_to_point3d functions.");
+        panic!(
+            "You must either define the dimensions function (trait Algorithm3D) on your map, or define the various point3d_to_index and index_to_point3d functions."
+        );
     }
 
     // Optional - check that an x/y/z coordinate is within the map bounds. If not provided,

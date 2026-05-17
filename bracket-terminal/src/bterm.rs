@@ -1,12 +1,12 @@
 #![allow(dead_code)]
 #[allow(unused_imports)]
 use crate::{
-    prelude::{
-        init_raw, BEvent, CharacterTranslationMode, Console, FlexiConsole, Font, FontCharType,
-        GameState, InitHints, Radians, RenderSprite, Shader, SimpleConsole, SpriteConsole,
-        SpriteSheet, TextAlign, KeyCode, XpFile, XpLayer, BACKEND, INPUT,
-    },
     BResult,
+    prelude::{
+        BACKEND, BEvent, CharacterTranslationMode, Console, FlexiConsole, Font, FontCharType,
+        GameState, INPUT, InitHints, KeyCode, Radians, RenderSprite, Shader, SimpleConsole,
+        SpriteConsole, SpriteSheet, TextAlign, XpFile, XpLayer, init_raw,
+    },
 };
 use bracket_color::prelude::RGBA;
 use bracket_geometry::prelude::{Point, PointF, Rect};

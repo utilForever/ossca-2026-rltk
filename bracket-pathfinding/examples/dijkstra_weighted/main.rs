@@ -37,11 +37,7 @@ fn main() {
                             0,
                             255 - {
                                 let n = flow_map.map[idx] * 12.0;
-                                if n > 255.0 {
-                                    255.0
-                                } else {
-                                    n
-                                }
+                                if n > 255.0 { 255.0 } else { n }
                             } as u8,
                             0,
                         )

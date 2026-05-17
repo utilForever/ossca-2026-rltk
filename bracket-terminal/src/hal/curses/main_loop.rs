@@ -2,9 +2,9 @@ use super::char_to_keycode;
 use super::*;
 use crate::hal::VirtualKeyCode;
 use crate::prelude::{
-    to_char, BEvent, BTerm, GameState, SimpleConsole, SparseConsole, BACKEND_INTERNAL, RGBA,
+    BACKEND_INTERNAL, BEvent, BTerm, GameState, RGBA, SimpleConsole, SparseConsole, to_char,
 };
-use crate::{clear_input_state, BResult};
+use crate::{BResult, clear_input_state};
 use pancurses::endwin;
 use std::collections::HashSet;
 use std::convert::TryInto;

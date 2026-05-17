@@ -1,6 +1,6 @@
 #[cfg(feature = "parsing")]
-use crate::prelude::{parse_dice_string, DiceParseError, DiceType};
-use rand::{rngs::SysRng, Rng, RngExt, SeedableRng};
+use crate::prelude::{DiceParseError, DiceType, parse_dice_string};
+use rand::{Rng, RngExt, SeedableRng, rngs::SysRng};
 use rand_chacha::ChaCha12Rng;
 
 #[cfg(feature = "serde")]

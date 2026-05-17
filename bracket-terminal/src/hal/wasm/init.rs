@@ -1,5 +1,5 @@
-use crate::prelude::{BTerm, InitHints, BACKEND_INTERNAL};
 use crate::BResult;
+use crate::prelude::{BACKEND_INTERNAL, BTerm, InitHints};
 
 pub fn init_raw<S: ToString>(
     width_pixels: u32,

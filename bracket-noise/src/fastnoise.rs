@@ -1685,11 +1685,7 @@ const CUBIC_2D_BOUNDING: f32 = 1.0 / 1.5 * 1.5;
 
 // Utility functions
 fn fast_floor(f: f32) -> i32 {
-    if f >= 0.0 {
-        f as i32
-    } else {
-        f as i32 - 1
-    }
+    if f >= 0.0 { f as i32 } else { f as i32 - 1 }
 }
 
 fn fast_round(f: f32) -> i32 {
@@ -3010,11 +3006,7 @@ impl FastNoise {
 
     #[allow(dead_code)]
     fn greater_1_0(&self, n: i32, greater_than: i32) -> i32 {
-        if n >= greater_than {
-            1
-        } else {
-            0
-        }
+        if n >= greater_than { 1 } else { 0 }
     }
 
     #[allow(dead_code)]

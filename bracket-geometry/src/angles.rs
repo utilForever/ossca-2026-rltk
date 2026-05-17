@@ -17,7 +17,7 @@ where
 
 #[cfg(test)]
 mod tests {
-    use crate::prelude::{project_angle, Degrees, Point, Radians};
+    use crate::prelude::{Degrees, Point, Radians, project_angle};
 
     #[test]
     fn test_project_angle() {

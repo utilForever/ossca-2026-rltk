@@ -1,9 +1,9 @@
 use super::BACKEND;
-use crate::hal::native::{shader_strings, WrappedContext};
-use crate::hal::scaler::ScreenScaler;
-use crate::hal::{setup_quad, Framebuffer, Shader};
-use crate::prelude::{BTerm, InitHints, BACKEND_INTERNAL};
 use crate::BResult;
+use crate::hal::native::{WrappedContext, shader_strings};
+use crate::hal::scaler::ScreenScaler;
+use crate::hal::{Framebuffer, Shader, setup_quad};
+use crate::prelude::{BACKEND_INTERNAL, BTerm, InitHints};
 use glow::HasContext;
 use glutin::{
     config::{ConfigSurfaceTypes, ConfigTemplateBuilder},

@@ -2,9 +2,9 @@ use std::collections::HashSet;
 
 use super::{SparseBackendNoBackground, SparseBackendWithBackground, SparseConsoleBackend};
 use crate::{
-    consoles::{common_draw, ConsoleFrontEnd, Rect, ScreenScaler, TerminalGlyph},
-    fonts::FontStore,
     BracketContext, FontCharType, SparseConsoleFeatures,
+    consoles::{ConsoleFrontEnd, Rect, ScreenScaler, TerminalGlyph, common_draw},
+    fonts::FontStore,
 };
 use bevy::prelude::{Assets, ColorMaterial, Commands, Handle, Mesh};
 use bracket_color::prelude::RGBA;

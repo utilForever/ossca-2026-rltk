@@ -1,11 +1,11 @@
 use super::{
-    back_end::{SimpleBackendNoBackground, SimpleBackendWithBackground, SimpleConsoleBackend},
     TerminalGlyph,
+    back_end::{SimpleBackendNoBackground, SimpleBackendWithBackground, SimpleConsoleBackend},
 };
 use crate::{
-    consoles::{common_draw, ConsoleFrontEnd, Rect, ScreenScaler},
-    fonts::FontStore,
     BracketContext, FontCharType, SimpleConsoleFeatures,
+    consoles::{ConsoleFrontEnd, Rect, ScreenScaler, common_draw},
+    fonts::FontStore,
 };
 use bevy::prelude::{Assets, ColorMaterial, Commands, Handle, Mesh};
 use bracket_color::prelude::RGBA;

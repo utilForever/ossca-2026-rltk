@@ -1,19 +1,19 @@
 use super::keycode_to_key;
-use super::{virtual_key_code_to_scan, BACKEND};
+use super::{BACKEND, virtual_key_code_to_scan};
 use crate::consoles::Console;
 use crate::prelude::{
-    to_char, BEvent, BTerm, GameState, SimpleConsole, SparseConsole, VirtualKeyCode,
-    BACKEND_INTERNAL,
+    BACKEND_INTERNAL, BEvent, BTerm, GameState, SimpleConsole, SparseConsole, VirtualKeyCode,
+    to_char,
 };
-use crate::{clear_input_state, BResult};
+use crate::{BResult, clear_input_state};
 use bracket_color::prelude::*;
-use crossterm::event::{poll, read, Event};
+use crossterm::event::{Event, poll, read};
 use crossterm::execute;
 use crossterm::style::Print;
 use crossterm::terminal::SetSize;
 use crossterm::{cursor, queue};
 use std::collections::HashSet;
-use std::io::{stdout, Write};
+use std::io::{Write, stdout};
 use std::time::Duration;
 use std::time::Instant;
 

@@ -1,7 +1,7 @@
 use crate::{
+    FontCharType, TerminalScalingMode,
     consoles::{ConsoleFrontEnd, DrawBatch, DrawCommand, ScreenScaler},
     fonts::FontStore,
-    FontCharType, TerminalScalingMode,
 };
 use bevy::prelude::{Mesh2d, Resource};
 use bracket_color::prelude::RGBA;

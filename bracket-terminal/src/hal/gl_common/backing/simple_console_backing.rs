@@ -1,7 +1,7 @@
-use crate::hal::scaler::FontScaler;
-use crate::hal::{Font, Shader, VertexArray, VertexArrayEntry, BACKEND};
-use crate::prelude::Tile;
 use crate::BResult;
+use crate::hal::scaler::FontScaler;
+use crate::hal::{BACKEND, Font, Shader, VertexArray, VertexArrayEntry};
+use crate::prelude::Tile;
 use bracket_color::prelude::RGBA;
 
 pub struct SimpleConsoleBackend {

@@ -2,12 +2,12 @@
 
 use super::index_array_helper::IndexBuffer;
 use super::vertex_array_helper::FloatBuffer;
+use crate::BResult;
 use crate::hal::{
-    scaler::{FontScaler, ScreenScaler},
     Font, Shader, WgpuLink,
+    scaler::{FontScaler, ScreenScaler},
 };
 use crate::prelude::FlexiTile;
-use crate::BResult;
 use bracket_color::prelude::RGBA;
 use bracket_geometry::prelude::PointF;
 use wgpu::{BufferUsages, RenderPipeline};

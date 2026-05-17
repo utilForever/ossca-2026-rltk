@@ -42,7 +42,9 @@ pub trait Algorithm2D: BaseMap {
 
     /// Retrieve the map's dimensions. Made optional to reduce API breakage.
     fn dimensions(&self) -> Point {
-        panic!("You must either define the dimensions function (trait Algorithm2D) on your map, or define the various point2d_to_index and index_to_point2d functions.");
+        panic!(
+            "You must either define the dimensions function (trait Algorithm2D) on your map, or define the various point2d_to_index and index_to_point2d functions."
+        );
     }
 
     // Optional - check that an x/y coordinate is within the map bounds. If not provided,

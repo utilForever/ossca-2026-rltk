@@ -1,4 +1,4 @@
-use bracket_terminal::prelude::{main_loop, BTerm, BTermBuilder, GameState, VirtualKeyCode, RGBA};
+use bracket_terminal::prelude::{BTerm, BTermBuilder, GameState, RGBA, VirtualKeyCode, main_loop};
 
 const USE_WORKAROUND: bool = false;
 fn main() {

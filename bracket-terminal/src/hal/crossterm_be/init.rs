@@ -1,11 +1,11 @@
-use super::{InitHints, BACKEND};
-use crate::prelude::BTerm;
+use super::{BACKEND, InitHints};
 use crate::BResult;
+use crate::prelude::BTerm;
 use crossterm::{
     execute,
-    terminal::{size, SetSize},
+    terminal::{SetSize, size},
 };
-use std::io::{stdout, Write};
+use std::io::{Write, stdout};
 
 pub fn init_raw<S: ToString>(
     width_pixels: u32,

@@ -1,6 +1,6 @@
+use crate::BResult;
 use crate::hal::{Font, Shader, VertexArray, VertexArrayEntry};
 use crate::prelude::{RenderSprite, SpriteSheet};
-use crate::BResult;
 use bracket_color::prelude::RGBA;
 
 pub struct SpriteConsoleBackend {

@@ -97,7 +97,7 @@ pub fn parse_dice_string(dice: &str) -> Result<DiceType, DiceParseError> {
 
 #[cfg(test)]
 mod tests {
-    use super::{parse_dice_string, DiceType};
+    use super::{DiceType, parse_dice_string};
 
     #[test]
     fn parse_1d6() {

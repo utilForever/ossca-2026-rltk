@@ -12,9 +12,9 @@ use std::io;
 use std::io::prelude::*;
 
 use byteorder::{LittleEndian, ReadBytesExt, WriteBytesExt};
+use flate2::Compression;
 use flate2::read::GzDecoder;
 use flate2::write::GzEncoder;
-use flate2::Compression;
 
 use crate::prelude::XpColor;
 

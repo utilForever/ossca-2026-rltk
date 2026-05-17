@@ -1,4 +1,4 @@
-use super::{gl_error, ShaderId};
+use super::{ShaderId, gl_error};
 use crate::console::log;
 use glow::HasContext;
 use std::str;
@@ -69,10 +69,12 @@ impl Shader {
     /// utility uniform functions
     /// ------------------------------------------------------------------------
     pub unsafe fn setBool(&self, gl: &glow::Context, name: &str, value: bool) {
-        unsafe { gl.uniform_1_i32(
-            gl.get_uniform_location(self.ID, name).as_ref(),
-            value as i32,
-        ) };
+        unsafe {
+            gl.uniform_1_i32(
+                gl.get_uniform_location(self.ID, name).as_ref(),
+                value as i32,
+            )
+        };
     }
 
     #[allow(non_snake_case)]
@@ -93,12 +95,14 @@ impl Shader {
     #[allow(clippy::missing_safety_doc)]
     /// ------------------------------------------------------------------------
     pub unsafe fn setVector3(&self, gl: &glow::Context, name: &str, value: &Vec3) {
-        unsafe { gl.uniform_3_f32(
-            gl.get_uniform_location(self.ID, name).as_ref(),
-            value.x,
-            value.y,
-            value.z,
-        ) };
+        unsafe {
+            gl.uniform_3_f32(
+                gl.get_uniform_location(self.ID, name).as_ref(),
+                value.x,
+                value.y,
+                value.z,
+            )
+        };
     }
 
     #[allow(non_snake_case)]
@@ -119,6 +123,12 @@ impl Shader {
     #[allow(clippy::missing_safety_doc)]
     /// ------------------------------------------------------------------------
     pub unsafe fn setMat4(&self, gl: &glow::Context, name: &str, mat: &[f32; 16]) {
-        unsafe { gl.uniform_matrix_4_f32_slice(gl.get_uniform_location(self.ID, name).as_ref(), false, mat) };
+        unsafe {
+            gl.uniform_matrix_4_f32_slice(
+                gl.get_uniform_location(self.ID, name).as_ref(),
+                false,
+                mat,
+            )
+        };
     }
 }

@@ -1,4 +1,4 @@
-use crate::prelude::{string_to_cp437, Console, DrawBatch, FontCharType, Tile};
+use crate::prelude::{Console, DrawBatch, FontCharType, Tile, string_to_cp437};
 use bracket_color::prelude::{ColorPair, RGB, RGBA};
 use bracket_geometry::prelude::{Point, Rect};
 use std::cmp;

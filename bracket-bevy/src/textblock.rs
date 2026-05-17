@@ -3,7 +3,7 @@ use bracket_geometry::prelude::{Point, Rect};
 use std::cmp;
 
 use crate::{
-    consoles::TerminalGlyph, cp437::string_to_cp437, BracketContext, DrawBatch, FontCharType,
+    BracketContext, DrawBatch, FontCharType, consoles::TerminalGlyph, cp437::string_to_cp437,
 };
 
 pub struct TextBlock {

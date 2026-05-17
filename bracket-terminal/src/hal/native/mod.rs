@@ -5,8 +5,8 @@ pub use init::*;
 #[path = "../dummy/keycodes.rs"]
 mod keycodes;
 mod mainloop;
-use crate::hal::scaler::{default_gutter_size, ScreenScaler};
 use crate::hal::ConsoleBacking;
+use crate::hal::scaler::{ScreenScaler, default_gutter_size};
 pub use keycodes::VirtualKeyCode;
 pub use mainloop::*;
 use parking_lot::Mutex;

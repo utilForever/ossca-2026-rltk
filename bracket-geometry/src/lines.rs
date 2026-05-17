@@ -67,7 +67,7 @@ pub fn line2d_vector(start: Point, end: Point) -> Vec<Point> {
 
 #[cfg(test)]
 mod tests {
-    use crate::prelude::{line2d_bresenham, line2d_vector, Point};
+    use crate::prelude::{Point, line2d_bresenham, line2d_vector};
 
     #[test]
     fn vector_line_h() {

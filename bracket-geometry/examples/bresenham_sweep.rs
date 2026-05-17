@@ -1,7 +1,7 @@
 use bracket_geometry::prelude::*;
 use crossterm::style::Print;
 use crossterm::{cursor, queue};
-use std::io::{stdout, Write};
+use std::io::{Write, stdout};
 
 fn main() {
     let mut angle = Degrees::new(0.0);

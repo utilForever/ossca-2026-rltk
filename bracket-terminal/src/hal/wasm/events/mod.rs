@@ -4,8 +4,8 @@ mod mouse;
 pub use mouse::*;
 mod external;
 pub use external::*;
-use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
+use wasm_bindgen::prelude::*;
 
 pub fn bind_wasm_events(canvas: &web_sys::HtmlCanvasElement) {
     // Handle keyboard input

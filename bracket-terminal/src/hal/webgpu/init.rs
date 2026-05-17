@@ -1,16 +1,12 @@
 //! WGPU Initialization Service
 
-use super::{InitHints, Shader, WgpuLink, WrappedContext, BACKEND};
+use super::{BACKEND, InitHints, Shader, WgpuLink, WrappedContext};
 use crate::{
-    gamestate::BTerm, hal::scaler::ScreenScaler, hal::Framebuffer, prelude::BACKEND_INTERNAL,
-    BResult,
+    BResult, gamestate::BTerm, hal::Framebuffer, hal::scaler::ScreenScaler,
+    prelude::BACKEND_INTERNAL,
 };
 use wgpu::{Adapter, Device, Instance, Queue, Surface, SurfaceConfiguration};
-use winit::{
-    dpi::LogicalSize,
-    event_loop::EventLoop,
-    window::Window,
-};
+use winit::{dpi::LogicalSize, event_loop::EventLoop, window::Window};
 
 pub fn init_raw<S: ToString>(
     width_pixels: u32,

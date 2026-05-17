@@ -1,6 +1,6 @@
 use crate::prelude::{
-    string_to_cp437, to_cp437, CharacterTranslationMode, ColoredTextSpans, Console, FontCharType,
-    TextAlign, XpLayer,
+    CharacterTranslationMode, ColoredTextSpans, Console, FontCharType, TextAlign, XpLayer,
+    string_to_cp437, to_cp437,
 };
 use bracket_color::prelude::RGBA;
 use bracket_geometry::prelude::Rect;

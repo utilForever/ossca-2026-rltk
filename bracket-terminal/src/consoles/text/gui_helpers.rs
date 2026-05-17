@@ -1,4 +1,4 @@
-use crate::prelude::{to_cp437, Console};
+use crate::prelude::{Console, to_cp437};
 use bracket_color::prelude::RGBA;
 
 /// Draws a box, starting at x/y with the extents width/height using CP437 line characters

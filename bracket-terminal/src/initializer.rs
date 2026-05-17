@@ -1,8 +1,8 @@
-use crate::prelude::{
-    init_raw, BTerm, CharacterTranslationMode, FlexiConsole, Font, InitHints, SimpleConsole,
-    SparseConsole, SpriteConsole, SpriteSheet, INPUT,
-};
 use crate::BResult;
+use crate::prelude::{
+    BTerm, CharacterTranslationMode, FlexiConsole, Font, INPUT, InitHints, SimpleConsole,
+    SparseConsole, SpriteConsole, SpriteSheet, init_raw,
+};
 use bracket_color::prelude::RGB;
 use std::collections::HashMap;
 use std::convert::*;

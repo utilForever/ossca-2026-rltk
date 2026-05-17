@@ -1,9 +1,9 @@
 //! Sprite console mapping for wgpu
 use super::index_array_helper::IndexBuffer;
 use super::vertex_array_helper::FloatBuffer;
+use crate::BResult;
 use crate::hal::{Font, Shader, WgpuLink};
 use crate::prelude::{RenderSprite, SpriteSheet};
-use crate::BResult;
 use bracket_color::prelude::RGBA;
 use wgpu::{BufferUsages, RenderPipeline};
 

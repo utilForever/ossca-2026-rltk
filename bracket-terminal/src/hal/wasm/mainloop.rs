@@ -1,8 +1,8 @@
 use super::events::*;
 use super::*;
 use crate::hal::*;
-use crate::prelude::{BTerm, GameState, BACKEND_INTERNAL};
-use crate::{clear_input_state, BResult};
+use crate::prelude::{BACKEND_INTERNAL, BTerm, GameState};
+use crate::{BResult, clear_input_state};
 use glow::HasContext;
 use std::cell::RefCell;
 use std::rc::Rc;

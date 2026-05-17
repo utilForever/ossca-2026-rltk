@@ -3,7 +3,7 @@
 // Benchmark field of view calculations,
 // most of the code copied from ex04-fov.rs
 
-use criterion::{criterion_group, criterion_main, Criterion};
+use criterion::{Criterion, criterion_group, criterion_main};
 use std::hint::black_box;
 
 use bracket_pathfinding::prelude::*;

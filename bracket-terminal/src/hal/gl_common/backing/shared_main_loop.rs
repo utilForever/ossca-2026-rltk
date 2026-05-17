@@ -1,10 +1,10 @@
+use crate::BResult;
 use crate::hal::scaler::FontScaler;
 use crate::hal::{
-    ConsoleBacking, FancyConsoleBackend, SimpleConsoleBackend, SparseConsoleBackend,
-    SpriteConsoleBackend, BACKEND, CONSOLE_BACKING,
+    BACKEND, CONSOLE_BACKING, ConsoleBacking, FancyConsoleBackend, SimpleConsoleBackend,
+    SparseConsoleBackend, SpriteConsoleBackend,
 };
-use crate::prelude::{FlexiConsole, SimpleConsole, SparseConsole, SpriteConsole, BACKEND_INTERNAL};
-use crate::BResult;
+use crate::prelude::{BACKEND_INTERNAL, FlexiConsole, SimpleConsole, SparseConsole, SpriteConsole};
 
 pub(crate) fn check_console_backing() {
     let mut be = BACKEND.lock();

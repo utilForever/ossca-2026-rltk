@@ -1,7 +1,7 @@
 use bracket_color::prelude::RGBA;
 use bracket_geometry::prelude::{Point, Rect};
 
-use super::{common_draw, ConsoleFrontEnd, TerminalGlyph};
+use super::{ConsoleFrontEnd, TerminalGlyph, common_draw};
 use crate::{BracketContext, FontCharType};
 
 pub struct VirtualConsole {
