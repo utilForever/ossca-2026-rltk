@@ -6,11 +6,11 @@ use wgpu::{Adapter, Device, Instance, Queue, Surface, SurfaceConfiguration};
 use winit::{event_loop::EventLoop, window::Window};
 
 /// Defines the WGPU platform
-pub struct PlatformGL {
+pub struct PlatformGL<'a> {
     /// Wrapper for the winit context
     pub context_wrapper: Option<WrappedContext>,
     /// Contains the WGPU back-end (device, etc.)
-    pub wgpu: Option<WgpuLink>,
+    pub wgpu: Option<WgpuLink<'a>>,
 
     /// Target delay per frame
     pub frame_sleep_time: Option<u64>,
@@ -24,9 +24,9 @@ pub struct PlatformGL {
     pub screen_scaler: ScreenScaler,
 }
 
-pub struct WgpuLink {
+pub struct WgpuLink<'a> {
     pub instance: Instance,
-    pub surface: Surface,
+    pub surface: Surface<'a>,
     pub adapter: Adapter,
     pub device: Device,
     pub queue: Queue,

@@ -12,7 +12,7 @@ mod backend;
 pub use backend::*;
 mod mainloop;
 pub use mainloop::*;
-pub use winit::event::VirtualKeyCode;
+pub use winit::keyboard::KeyCode;
 mod backing;
 pub(crate) use backing::*;
 mod framebuffer;
