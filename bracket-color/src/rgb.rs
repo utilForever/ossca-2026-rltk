@@ -485,6 +485,67 @@ mod tests {
         assert_rgb_eq(RGB::new(), 0.0, 0.0, 0.0);
     }
 
+    #[test]
+    fn from_f32_clamps_components() {
+        let rgb = RGB::from_f32(-1.0, 0.5, 2.0);
+        assert_rgb_eq(rgb, 0.0, 0.5, 1.0);
+    }
+
+    #[test]
+    fn from_u8_converts_components() {
+        let rgb = RGB::from_u8(255, 128, 0);
+        assert_rgb_eq(rgb, 1.0, 128.0 / 255.0, 0.0);
+    }
+
+    #[test]
+    fn tuple_conversion_uses_u8_components() {
+        let rgb = RGB::from((64, 128, 255));
+        assert_rgb_eq(rgb, 64.0 / 255.0, 128.0 / 255.0, 1.0);
+    }
+
+    #[test]
+    fn rgba_conversion_drops_alpha() {
+        let rgb = RGB::from(RGBA::from_f32(0.25, 0.5, 0.75, 0.125));
+        assert_rgb_eq(rgb, 0.25, 0.5, 0.75);
+    }
+
+    #[test]
+    fn hsv_conversion_delegates_to_hsv_to_rgb() {
+        let rgb = RGB::from(HSV::from_f32(120.0 / 360.0, 1.0, 1.0));
+        assert_rgb_eq(rgb, 0.0, 1.0, 0.0);
+    }
+
+    #[rstest]
+    #[case(RGB::from_f32(0.25, 0.5, 0.75) + 0.125, 0.375, 0.625, 0.875)]
+    #[case(
+        RGB::from_f32(0.25, 0.5, 0.75) + RGB::from_f32(0.125, 0.25, 0.125),
+        0.375,
+        0.75,
+        0.875
+    )]
+    #[case(RGB::from_f32(0.25, 0.5, 0.75) - 0.125, 0.125, 0.375, 0.625)]
+    #[case(
+        RGB::from_f32(0.25, 0.5, 0.75) - RGB::from_f32(0.125, 0.25, 0.125),
+        0.125,
+        0.25,
+        0.625
+    )]
+    #[case(RGB::from_f32(0.25, 0.5, 0.75) * 0.5, 0.125, 0.25, 0.375)]
+    #[case(
+        RGB::from_f32(0.25, 0.5, 0.75) * RGB::from_f32(0.125, 0.25, 0.125),
+        0.03125,
+        0.125,
+        0.09375
+    )]
+    fn arithmetic_operators_apply_component_wise(
+        #[case] rgb: RGB,
+        #[case] r: f32,
+        #[case] g: f32,
+        #[case] b: f32,
+    ) {
+        assert_rgb_eq(rgb, r, g, b);
+    }
+
     #[rstest]
     #[case(RGB::from_f32(1.0, 0.0, 0.0), 0.0, 1.0, 1.0)]
     #[case(RGB::from_f32(0.0, 1.0, 0.0), 120.0 / 360.0, 1.0, 1.0)]
@@ -515,13 +576,47 @@ mod tests {
     }
 
     #[test]
-    fn convert_rgb_to_rgba_preserves_rgb_and_sets_alpha() {
-        let rgba = RGB::from_f32(1.0, 0.0, 0.0).to_rgba(0.5);
+    fn convert_magenta_to_hsv_wraps_red_hue() {
+        let rgb = RGB::from_f32(1.0, 0.0, 0.5);
+        let hsv = rgb.to_hsv();
 
-        assert_approx_eq(rgba.r, 1.0);
-        assert_approx_eq(rgba.g, 0.0);
-        assert_approx_eq(rgba.b, 0.0);
-        assert_approx_eq(rgba.a, 0.5);
+        assert_hsv_eq(hsv, 330.0 / 360.0, 1.0, 1.0);
+    }
+
+    #[rstest]
+    #[case(0.0)]
+    #[case(0.5)]
+    #[case(1.0)]
+    fn convert_rgb_to_rgba_preserves_rgb_and_sets_alpha(#[case] alpha: f32) {
+        let rgba = RGB::from_f32(1.0, 0.0, 0.0).to_rgba(alpha);
+
+        assert_rgba_eq(rgba, 1.0, 0.0, 0.0, alpha);
+    }
+
+    #[test]
+    fn xp_color_round_trip_preserves_bytes() {
+        let xp = XpColor::new(17, 128, 255);
+        let rgb = RGB::from_xp(xp);
+        assert_rgb_eq(rgb, 17.0 / 255.0, 128.0 / 255.0, 1.0);
+
+        let converted = rgb.to_xp();
+        assert_eq!(converted.r, 17);
+        assert_eq!(converted.g, 128);
+        assert_eq!(converted.b, 255);
+    }
+
+    #[test]
+    fn to_xp_clamps_out_of_range_components() {
+        let rgb = RGB {
+            r: -0.5,
+            g: 0.5,
+            b: 1.5,
+        };
+        let xp = rgb.to_xp();
+
+        assert_eq!(xp.r, 0);
+        assert_eq!(xp.g, 127);
+        assert_eq!(xp.b, 255);
     }
 
     #[rstest]
@@ -542,27 +637,81 @@ mod tests {
 
     #[rstest]
     #[case("")]
+    #[case("#")]
+    #[case("#F")]
+    #[case("#FF")]
     #[case("#FFF")]
     #[case("#FFFF")]
+    #[case("#FFFFF")]
     #[case("#FFFFFF00")]
     fn parse_hex_rejects_invalid_length(#[case] hex: &str) {
         let err = RGB::from_hex(hex).unwrap_err();
         assert_eq!(err, HtmlColorConversionError::InvalidStringLength);
     }
 
-    #[test]
-    fn parse_hex_rejects_invalid_character() {
-        let err = RGB::from_hex("#GG0000").unwrap_err();
+    #[rstest]
+    #[case("#GG0000")]
+    #[case("#FG0000")]
+    #[case("#FFG000")]
+    #[case("#FF0G00")]
+    #[case("#FF00G0")]
+    #[case("#FF000G")]
+    fn parse_hex_rejects_invalid_character(#[case] hex: &str) {
+        let err = RGB::from_hex(hex).unwrap_err();
         assert_eq!(err, HtmlColorConversionError::InvalidCharacter);
+    }
+
+    #[cfg(feature = "bevy")]
+    #[test]
+    fn bevy_color_conversion_preserves_rgb_channels() {
+        let rgb = RGB::from(bevy::prelude::Color::srgb(0.25, 0.5, 0.75));
+        assert_rgb_eq(rgb, 0.25, 0.5, 0.75);
+    }
+
+    #[cfg(feature = "bevy")]
+    #[test]
+    fn rgb_conversion_to_bevy_color_preserves_rgb_channels() {
+        let color = bevy::prelude::Color::from(RGB::from_f32(0.25, 0.5, 0.75));
+        let srgba = color.to_srgba();
+
+        assert_approx_eq(srgba.red, 0.25);
+        assert_approx_eq(srgba.green, 0.5);
+        assert_approx_eq(srgba.blue, 0.75);
     }
 
     #[test]
     fn test_blue_named() {
         let rgb = RGB::named(BLUE);
 
-        assert_approx_eq(rgb.r, 0.0);
-        assert_approx_eq(rgb.g, 0.0);
-        assert_approx_eq(rgb.b, 1.0);
+        assert_rgb_eq(rgb, 0.0, 0.0, 1.0);
+    }
+
+    #[test]
+    fn to_greyscale_uses_luminance_weights() {
+        let grey = RGB::from_f32(1.0, 0.0, 0.0).to_greyscale();
+        assert_rgb_eq(grey, 0.2126, 0.2126, 0.2126);
+    }
+
+    #[test]
+    fn desaturate_keeps_value_and_removes_saturation() {
+        let desaturated = RGB::from_f32(1.0, 0.0, 0.0).desaturate();
+        assert_rgb_eq(desaturated, 1.0, 1.0, 1.0);
+    }
+
+    #[rstest]
+    #[case(0.0, 0.0, 0.0, 0.0)]
+    #[case(0.5, 0.5, 0.5, 0.5)]
+    #[case(1.0, 1.0, 1.0, 1.0)]
+    fn lerp_interpolates_between_colors(
+        #[case] percent: f32,
+        #[case] r: f32,
+        #[case] g: f32,
+        #[case] b: f32,
+    ) {
+        let black = RGB::named(BLACK);
+        let white = RGB::named(WHITE);
+
+        assert_rgb_eq(black.lerp(white, percent), r, g, b);
     }
 
     #[test]

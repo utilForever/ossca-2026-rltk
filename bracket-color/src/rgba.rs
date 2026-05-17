@@ -506,6 +506,68 @@ mod tests {
     }
 
     #[rstest]
+    #[case(RGBA::from(RGB::from_f32(0.25, 0.5, 0.75)), 0.25, 0.5, 0.75, 1.0)]
+    #[case(
+        RGBA::from((64, 128, 255, 32)),
+        64.0 / 255.0,
+        128.0 / 255.0,
+        1.0,
+        32.0 / 255.0
+    )]
+    #[case(RGBA::from((64, 128, 255)), 64.0 / 255.0, 128.0 / 255.0, 1.0, 1.0)]
+    #[case(RGBA::from([-1.0, 0.5, 2.0, 0.25]), 0.0, 0.5, 1.0, 0.25)]
+    fn conversions_fill_or_preserve_alpha(
+        #[case] rgba: RGBA,
+        #[case] r: f32,
+        #[case] g: f32,
+        #[case] b: f32,
+        #[case] a: f32,
+    ) {
+        assert_rgba_eq(rgba, r, g, b, a);
+    }
+
+    #[test]
+    fn hsv_conversion_uses_opaque_alpha() {
+        let rgba = RGBA::from(HSV::from_f32(240.0 / 360.0, 1.0, 1.0));
+        assert_rgba_eq(rgba, 0.0, 0.0, 1.0, 1.0);
+    }
+
+    #[rstest]
+    #[case(RGBA::from_f32(0.25, 0.5, 0.75, 0.5) + 0.125, 0.375, 0.625, 0.875, 0.625)]
+    #[case(
+        RGBA::from_f32(0.25, 0.5, 0.75, 0.5) + RGBA::from_f32(0.125, 0.25, 0.125, 0.25),
+        0.375,
+        0.75,
+        0.875,
+        0.75
+    )]
+    #[case(RGBA::from_f32(0.25, 0.5, 0.75, 0.5) - 0.125, 0.125, 0.375, 0.625, 0.375)]
+    #[case(
+        RGBA::from_f32(0.25, 0.5, 0.75, 0.5) - RGBA::from_f32(0.125, 0.25, 0.125, 0.25),
+        0.125,
+        0.25,
+        0.625,
+        0.25
+    )]
+    #[case(RGBA::from_f32(0.25, 0.5, 0.75, 0.5) * 0.5, 0.125, 0.25, 0.375, 0.25)]
+    #[case(
+        RGBA::from_f32(0.25, 0.5, 0.75, 0.5) * RGBA::from_f32(0.125, 0.25, 0.125, 0.25),
+        0.03125,
+        0.125,
+        0.09375,
+        0.125
+    )]
+    fn arithmetic_operators_apply_component_wise(
+        #[case] rgba: RGBA,
+        #[case] r: f32,
+        #[case] g: f32,
+        #[case] b: f32,
+        #[case] a: f32,
+    ) {
+        assert_rgba_eq(rgba, r, g, b, a);
+    }
+
+    #[rstest]
     #[case("#FF0000FF", 1.0, 0.0, 0.0, 1.0)]
     #[case("#00FF00FF", 0.0, 1.0, 0.0, 1.0)]
     #[case("#0000FFFF", 0.0, 0.0, 1.0, 1.0)]
@@ -529,18 +591,63 @@ mod tests {
 
     #[rstest]
     #[case("")]
+    #[case("#")]
+    #[case("#F")]
+    #[case("#FF")]
     #[case("#FFF")]
+    #[case("#FFFF")]
+    #[case("#FFFFF")]
     #[case("#FFFFFF")]
+    #[case("#FFFFFFF")]
     #[case("#FFFFFFFF00")]
     fn parse_hex_rejects_invalid_length(#[case] hex: &str) {
         let err = RGBA::from_hex(hex).unwrap_err();
         assert_eq!(err, HtmlColorConversionError::InvalidStringLength);
     }
 
-    #[test]
-    fn parse_hex_rejects_invalid_character() {
-        let err = RGBA::from_hex("#GG0000FF").unwrap_err();
+    #[rstest]
+    #[case("#GG0000FF")]
+    #[case("#FG0000FF")]
+    #[case("#FFG000FF")]
+    #[case("#FF0G00FF")]
+    #[case("#FF00G0FF")]
+    #[case("#FF000GFF")]
+    #[case("#FF0000GF")]
+    #[case("#FF0000FG")]
+    fn parse_hex_rejects_invalid_character(#[case] hex: &str) {
+        let err = RGBA::from_hex(hex).unwrap_err();
         assert_eq!(err, HtmlColorConversionError::InvalidCharacter);
+    }
+
+    #[cfg(feature = "bevy")]
+    #[test]
+    fn as_rgba_f32_returns_components_for_bevy() {
+        let rgba = RGBA::from_f32(0.25, 0.5, 0.75, 0.125);
+        let [r, g, b, a] = rgba.as_rgba_f32();
+
+        assert_approx_eq(r, 0.25);
+        assert_approx_eq(g, 0.5);
+        assert_approx_eq(b, 0.75);
+        assert_approx_eq(a, 0.125);
+    }
+
+    #[cfg(feature = "bevy")]
+    #[test]
+    fn bevy_color_conversion_preserves_rgba_channels() {
+        let rgba = RGBA::from(bevy::prelude::Color::srgba(0.25, 0.5, 0.75, 0.125));
+        assert_rgba_eq(rgba, 0.25, 0.5, 0.75, 0.125);
+    }
+
+    #[cfg(feature = "bevy")]
+    #[test]
+    fn rgba_conversion_to_bevy_color_preserves_rgba_channels() {
+        let color = bevy::prelude::Color::from(RGBA::from_f32(0.25, 0.5, 0.75, 0.125));
+        let srgba = color.to_srgba();
+
+        assert_approx_eq(srgba.red, 0.25);
+        assert_approx_eq(srgba.green, 0.5);
+        assert_approx_eq(srgba.blue, 0.75);
+        assert_approx_eq(srgba.alpha, 0.125);
     }
 
     #[test]
@@ -581,6 +688,8 @@ mod tests {
         let white = RGBA::named(WHITE);
         assert!(black.lerp(white, 0.0) == black);
         assert!(black.lerp(white, 1.0) == white);
+
+        assert_rgba_eq(black.lerp(white, 0.5), 0.5, 0.5, 0.5, 1.0);
     }
 
     #[test]
@@ -592,10 +701,7 @@ mod tests {
         let l0 = black.lerp_alpha(white, 0.0);
         let l1 = black.lerp_alpha(white, 1.0);
 
-        assert!(l0.a < f32::EPSILON);
-        assert!((l1.a - 1.0).abs() < f32::EPSILON);
-
-        assert!(l0.to_rgb() == RGB::named(BLACK));
-        assert!(l1.to_rgb() == RGB::named(BLACK));
+        assert_rgba_eq(l0, 0.0, 0.0, 0.0, 0.0);
+        assert_rgba_eq(l1, 0.0, 0.0, 0.0, 1.0);
     }
 }
